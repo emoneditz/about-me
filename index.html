@@ -1,87 +1,95 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth dark"> <!-- Default to dark mode -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Super-Premium Profile</title>
+    <title>Emon Lab</title> <!-- Title set to Emon Lab -->
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts - Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Custom CSS variables for dark/light mode */
         :root {
             --bg-color-light: #f0f2f5;
-            --text-color-light: #333;
-            --card-bg-light: rgba(255, 255, 255, 0.8);
-            --border-color-light: rgba(255, 255, 255, 0.3);
-            --header-bg-light: rgba(255, 255, 255, 0.7);
-            --input-bg-light: rgba(255, 255, 255, 0.6);
+            --text-color-light: #e0e7ff;
+            --card-bg-light: rgba(255, 255, 255, 0.08);
+            --border-color-light: rgba(255, 255, 255, 0.05);
+            --header-bg-light: rgba(255, 255, 255, 0.05);
+            --primary-glow: #00eaff;
+            --secondary-glow: #e0aaff;
+            --gradient-start: #00c6ff;
+            --gradient-end: #a78bfa;
+            --modal-bg-light: rgba(255, 255, 255, 0.1);
+            --chat-bubble-user-light: rgba(0, 198, 255, 0.2);
+            --chat-bubble-ai-light: rgba(167, 139, 250, 0.2);
         }
 
         html.dark {
             --bg-color-dark: #1a202c;
             --text-color-dark: #e2e8f0;
-            --card-bg-dark: rgba(45, 55, 72, 0.8);
-            --border-color-dark: rgba(255, 255, 255, 0.1);
-            --header-bg-dark: rgba(26, 32, 44, 0.7);
-            --input-bg-dark: rgba(45, 55, 72, 0.6);
+            --card-bg-dark: rgba(26, 32, 44, 0.08);
+            --border-color-dark: rgba(255, 255, 255, 0.03);
+            --header-bg-dark: rgba(26, 32, 44, 0.05);
+            --primary-glow: #8affd1;
+            --secondary-glow: #c4b5fd;
+            --gradient-start: #8affd1;
+            --gradient-end: #c4b5fd;
+            --modal-bg-dark: rgba(26, 32, 44, 0.1);
+            --chat-bubble-user-dark: rgba(138, 255, 209, 0.2);
+            --chat-bubble-ai-dark: rgba(196, 181, 253, 0.2);
         }
 
         /* Base styles */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color-light);
-            color: var(--text-color-light);
-            transition: background-color 0.3s ease, color 0.3s ease;
+            color: var(--text-color-dark); /* Default to dark theme text color */
+            transition: color 0.3s ease;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            background-color: #000;
         }
 
         html.dark body {
-            background-color: var(--bg-color-dark);
             color: var(--text-color-dark);
         }
 
         /* Glassy Effect Mixin */
         .glassy {
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); /* Safari support */
-            background-color: var(--card-bg-light);
-            border: 1px solid var(--border-color-light);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
+            backdrop-filter: blur(35px) saturate(180%);
+            -webkit-backdrop-filter: blur(35px) saturate(180%);
+            background-color: var(--card-bg-dark);
+            border: 1px solid var(--border-color-dark);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            transition: all 0.4s ease-out;
         }
 
         html.dark .glassy {
             background-color: var(--card-bg-dark);
             border: 1px solid var(--border-color-dark);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.02);
         }
 
         /* Header Specific Styles */
         .header-glassy {
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            background-color: var(--header-bg-light);
-            transition: background-color 0.3s ease;
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            background-color: var(--header-bg-dark);
+            border-bottom: 1px solid var(--border-color-dark);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         html.dark .header-glassy {
             background-color: var(--header-bg-dark);
-        }
-
-        /* Input Glassy Effect */
-        .input-glassy {
-            background-color: var(--input-bg-light);
-            border: 1px solid var(--border-color-light);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-
-        html.dark .input-glassy {
-            background-color: var(--input-bg-dark);
-            border: 1px solid var(--border-color-dark);
+            border-bottom: 1px solid var(--border-color-dark);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         /* Preloader Styles */
@@ -91,30 +99,43 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--bg-color-light);
+            background: #000000;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.5s ease-out;
+            transition: opacity 0.7s ease-out;
         }
 
-        html.dark #preloader {
-            background: var(--bg-color-dark);
+        .spinner-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
         }
 
         .spinner {
-            border: 8px solid rgba(0, 0, 0, 0.1);
-            border-top: 8px solid #6366f1; /* Indigo 500 */
+            position: absolute;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
+            animation: spin 1.5s linear infinite;
         }
 
-        html.dark .spinner {
-            border-color: rgba(255, 255, 255, 0.2);
-            border-top-color: #a78bfa; /* Violet 400 */
+        .spinner:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(255, 255, 255, 0.1);
+            border-top: 8px solid var(--primary-glow);
+            box-shadow: 0 0 25px var(--primary-glow);
+        }
+
+        .spinner:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255, 255, 255, 0.1);
+            border-top: 6px solid var(--secondary-glow);
+            animation-delay: 0.2s;
+            box-shadow: 0 0 20px var(--secondary-glow);
+            top: 10px;
+            left: 10px;
         }
 
         @keyframes spin {
@@ -124,310 +145,553 @@
 
         /* Particle.js container */
         #particles-js {
-            position: absolute;
+            position: fixed;
             width: 100%;
             height: 100%;
             top: 0;
             left: 0;
-            z-index: -1; /* Ensure particles are behind content */
+            z-index: -2;
+            background: linear-gradient(135deg, #0a0a1a, #1a0a2a);
+            transition: background 0.5s ease;
         }
 
-        /* Custom scrollbar for a premium feel */
+        html.dark #particles-js {
+            background: linear-gradient(135deg, #050510, #100515);
+        }
+
+        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
 
         ::-webkit-scrollbar-track {
-            background: var(--bg-color-light);
+            background: rgba(255,255,255,0.02);
             border-radius: 10px;
         }
 
-        html.dark ::-webkit-scrollbar-track {
-            background: var(--bg-color-dark);
-        }
-
         ::-webkit-scrollbar-thumb {
-            background: #a78bfa; /* Violet 400 */
+            background: var(--gradient-end);
             border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #8b5cf6; /* Violet 500 */
+            background: var(--gradient-start);
         }
 
-        /* Portfolio Card Hover Effect */
-        .portfolio-card-overlay {
+        /* Gradient for special text and buttons */
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+        }
+
+        .gradient-button {
+            background-image: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            box-shadow: 0 6px 20px rgba(0, 198, 255, 0.4);
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .gradient-button:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0, 198, 255, 0.6);
+        }
+        html.dark .gradient-button {
+            box-shadow: 0 6px 20px rgba(138, 255, 209, 0.4);
+        }
+        html.dark .gradient-button:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(138, 255, 209, 0.6);
+        }
+
+        /* Link Card specific styles */
+        .link-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease;
+            min-height: 120px;
+            overflow: hidden;
+        }
+
+        .link-card::before {
+            content: '';
             position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            background: radial-gradient(circle at center, rgba(var(--primary-glow-rgb), 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .link-card:hover::before {
+            opacity: 1;
+        }
+
+        .link-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .link-card a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            text-decoration: none;
+            color: inherit;
+            z-index: 2;
+        }
+
+        .link-card-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .link-card-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-color-dark);
+            transition: color 0.3s ease;
+            letter-spacing: 0.025em;
+        }
+
+        html.dark .link-card-content h3 {
+            color: var(--text-color-dark);
+        }
+
+        .link-card-content p {
+            font-size: 1.1rem;
+            color: var(--text-color-dark);
+            opacity: 0.7;
+            transition: color 0.3s ease, opacity 0.3s ease;
+        }
+
+        html.dark .link-card-content p {
+            color: var(--text-color-dark);
+        }
+
+        .link-card:hover .link-card-content h3,
+        .link-card:hover .link-card-content p {
+            color: var(--primary-glow);
+        }
+
+        /* Social icon within link card */
+        .link-card .social-icon-in-card {
+            font-size: 3rem; /* Adjust size as needed */
+            margin-bottom: 1rem;
+            color: var(--primary-glow); /* Example color, can be customized per icon */
+            transition: color 0.3s ease;
+        }
+        .link-card:hover .social-icon-in-card {
+            color: var(--secondary-glow); /* Change color on hover */
+        }
+
+
+        /* General section padding and positioning */
+        section {
+            position: relative;
+            z-index: 1;
+            padding-top: 10rem;
+            padding-bottom: 10rem;
+        }
+
+        /* Avatar glow */
+        .avatar-glow {
+            box-shadow: 0 0 30px rgba(138, 255, 209, 0.6), inset 0 0 15px rgba(138, 255, 209, 0.4);
+            transition: all 0.4s ease;
+        }
+        html.dark .avatar-glow {
+            box-shadow: 0 0 30px rgba(138, 255, 209, 0.6), inset 0 0 15px rgba(138, 255, 209, 0.4);
+        }
+        .avatar-glow:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(138, 255, 209, 0.8), inset 0 0 20px rgba(138, 255, 209, 0.6);
+        }
+        html.dark .avatar-glow:hover {
+            box-shadow: 0 0 40px rgba(138, 255, 209, 0.8), inset 0 0 20px rgba(138, 255, 209, 0.6);
+        }
+
+        /* Define RGB values for JS use in radial gradients */
+        .light-mode-rgb {
+            --primary-glow-rgb: 0, 234, 255;
+            --secondary-glow-rgb: 224, 170, 255;
+        }
+        .dark-mode-rgb {
+            --primary-glow-rgb: 138, 255, 209;
+            --secondary-glow-rgb: 196, 181, 253;
+        }
+
+        /* Gemini Assistant Modal Styles */
+        .modal-overlay {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
+            z-index: 1000;
             opacity: 0;
-            transition: opacity 0.3s ease;
-            border-radius: 12px;
-            text-align: center;
-            padding: 1rem;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
-        .portfolio-card:hover .portfolio-card-overlay {
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .gemini-modal {
+            background-color: var(--modal-bg-dark);
+            border: 1px solid var(--border-color-dark);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            height: 80%;
+            max-height: 700px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.active .gemini-modal {
+            transform: translateY(0);
             opacity: 1;
         }
 
-        /* Smooth scroll for anchor links */
-        html {
+        html.dark .gemini-modal {
+            background-color: var(--modal-bg-dark);
+            border: 1px solid var(--border-color-dark);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-glow);
+            letter-spacing: 0.05em;
+        }
+
+        html.dark .modal-header {
+            border-bottom: 1px solid var(--border-color-dark);
+        }
+
+        .modal-close-button {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--text-color-dark);
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+        .modal-close-button:hover {
+            color: var(--primary-glow);
+            transform: rotate(90deg);
+        }
+        html.dark .modal-close-button {
+            color: var(--text-color-dark);
+        }
+
+        .chat-history {
+            flex-grow: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
             scroll-behavior: smooth;
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 15px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .chat-bubble.user {
+            align-self: flex-end;
+            background-color: var(--chat-bubble-user-dark);
+            border: 1px solid rgba(138, 255, 209, 0.3);
+            color: var(--text-color-dark);
+        }
+        html.dark .chat-bubble.user {
+            background-color: var(--chat-bubble-user-dark);
+            border: 1px solid rgba(138, 255, 209, 0.3);
+            color: var(--text-color-dark);
+        }
+
+        .chat-bubble.ai {
+            align-self: flex-start;
+            background-color: var(--chat-bubble-ai-dark);
+            border: 1px solid rgba(196, 181, 253, 0.3);
+            color: var(--text-color-dark);
+        }
+        html.dark .chat-bubble.ai {
+            background-color: var(--chat-bubble-ai-dark);
+            border: 1px solid rgba(196, 181, 253, 0.3);
+            color: var(--text-color-dark);
+        }
+
+        .chat-input-area {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border-color-dark);
+            display: flex;
+            gap: 1rem;
+        }
+        html.dark .chat-input-area {
+            border-top: 1px solid var(--border-color-dark);
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 0.8rem 1.2rem;
+            border-radius: 10px;
+            background-color: rgba(26, 32, 44, 0.1);
+            border: 1px solid var(--border-color-dark);
+            color: var(--text-color-dark);
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .chat-input:focus {
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 0 2px rgba(var(--primary-glow-rgb), 0.3);
+        }
+        html.dark .chat-input {
+            background-color: rgba(26, 32, 44, 0.1);
+            border: 1px solid var(--border-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        .chat-send-button {
+            padding: 0.8rem 1.2rem;
+            border-radius: 10px;
+            background-image: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+        .chat-send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(var(--primary-glow-rgb), 0.4);
+        }
+        .chat-send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-glow);
+            font-style: italic;
+            align-self: flex-start;
+        }
+        .loading-indicator .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary-glow);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+        .loading-indicator .dot:nth-child(2) { animation-delay: -0.3s; }
+        .loading-indicator .dot:nth-child(3) { animation-delay: -0.6s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
         }
     </style>
 </head>
-<body class="relative">
+<body class="relative dark-mode-rgb"> <!-- Default to dark-mode-rgb -->
 
     <!-- Preloader -->
     <div id="preloader">
-        <div class="spinner"></div>
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <div class="spinner"></div>
+        </div>
     </div>
 
     <!-- Header -->
-    <header id="main-header" class="fixed top-0 left-0 w-full z-50 py-4 px-6 md:px-12 header-glassy shadow-lg">
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 py-6 px-8 md:px-16 header-glassy shadow-lg">
         <nav class="container mx-auto flex justify-between items-center">
-            <div class="text-2xl font-bold text-indigo-600 dark:text-violet-400">YourName</div>
-            <ul class="hidden md:flex space-x-8">
-                <li><a href="#hero" class="text-lg hover:text-indigo-600 dark:hover:text-violet-400 transition-colors duration-300">Home</a></li>
-                <li><a href="#about" class="text-lg hover:text-indigo-600 dark:hover:text-violet-400 transition-colors duration-300">About</a></li>
-                <li><a href="#skills" class="text-lg hover:text-indigo-600 dark:hover:text-violet-400 transition-colors duration-300">Skills</a></li>
-                <li><a href="#portfolio" class="text-lg hover:text-indigo-600 dark:hover:text-violet-400 transition-colors duration-300">Portfolio</a></li>
-                <li><a href="#contact" class="text-lg hover:text-indigo-600 dark:hover:text-violet-400 transition-colors duration-300">Contact</a></li>
-            </ul>
-            <div class="flex items-center space-x-4">
+            <div class="text-3xl font-extrabold gradient-text tracking-wider">Emon Lab</div> <!-- Header text to Emon Lab -->
+            <div class="flex items-center space-x-6">
                 <!-- Dark/Light Mode Toggle -->
-                <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-400 transition-colors duration-300">
-                    <i class="fas fa-moon hidden dark:block text-xl"></i>
-                    <i class="fas fa-sun block dark:hidden text-xl"></i>
-                </button>
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-400">
-                    <i class="fas fa-bars text-2xl"></i>
+                <button id="theme-toggle" class="p-3 rounded-full bg-gray-900 bg-opacity-30 text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-glow transition-colors duration-300">
+                    <i class="fas fa-moon hidden dark:block text-2xl"></i>
+                    <i class="fas fa-sun block dark:hidden text-2xl"></i>
                 </button>
             </div>
         </nav>
-        <!-- Mobile Menu Overlay -->
-        <div id="mobile-menu" class="fixed inset-0 bg-gray-900 bg-opacity-90 z-40 hidden md:hidden flex flex-col items-center justify-center space-y-8 text-white">
-            <button id="close-mobile-menu" class="absolute top-6 right-6 text-white text-3xl focus:outline-none">
-                <i class="fas fa-times"></i>
-            </button>
-            <ul class="text-center text-3xl space-y-6">
-                <li><a href="#hero" class="hover:text-indigo-400 transition-colors duration-300 mobile-nav-link">Home</a></li>
-                <li><a href="#about" class="hover:text-indigo-400 transition-colors duration-300 mobile-nav-link">About</a></li>
-                <li><a href="#skills" class="hover:text-indigo-400 transition-colors duration-300 mobile-nav-link">Skills</a></li>
-                <li><a href="#portfolio" class="hover:text-indigo-400 transition-colors duration-300 mobile-nav-link">Portfolio</a></li>
-                <li><a href="#contact" class="hover:text-indigo-400 transition-colors duration-300 mobile-nav-link">Contact</a></li>
-            </ul>
-        </div>
     </header>
 
-    <!-- Hero Section -->
-    <section id="hero" class="relative min-h-screen flex items-center justify-center text-center overflow-hidden py-16 px-4">
-        <div id="particles-js"></div>
-        <div class="relative z-10 p-8 glassy max-w-4xl mx-auto rounded-xl">
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight text-indigo-700 dark:text-violet-300">
-                Hi, I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-violet-400 dark:to-pink-500">Your Name</span>
-            </h1>
-            <p class="text-2xl md:text-4xl font-medium mb-8">
-                I am a <span id="typed-text" class="font-bold text-indigo-600 dark:text-violet-400"></span>
-            </p>
-            <p class="text-lg md:text-xl max-w-2xl mx-auto mb-10">
-                Passionate about creating beautiful and functional web experiences. Explore my work below!
-            </p>
-            <a href="#portfolio" class="inline-block bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-violet-400 dark:to-pink-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out">
-                View My Work <i class="fas fa-arrow-right ml-2"></i>
-            </a>
+    <!-- Particles.js background -->
+    <div id="particles-js"></div>
+
+    <!-- Hero Section (for avatar and intro) -->
+    <section id="hero" class="relative z-10 flex flex-col items-center justify-center min-h-screen pt-32 pb-16 px-4 w-full max-w-2xl mx-auto text-white">
+        <img src="https://placehold.co/200x200/00c6ff/ffffff?text=Emon's+Avatar" alt="Emon's Sovereign Avatar" class="rounded-full w-48 h-48 mx-auto object-cover mb-8 shadow-lg border-4 border-primary-glow avatar-glow">
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-4 leading-tight text-center">
+            I am <span class="gradient-text">Emon</span>
+        </h1>
+        <p class="text-2xl md:text-3xl max-w-2xl mx-auto text-gray-300 text-center font-medium mb-10">
+            <span id="typed-text" class="font-bold gradient-text"></span>
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 items-center">
+            <!-- "Ask me about Emon" button with robot icon -->
+            <button id="ask-emon-button" class="inline-flex items-center justify-center px-8 py-4 rounded-full gradient-button text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out text-xl tracking-wide">
+                <i class="fas fa-robot mr-3"></i> Ask me about Emon
+            </button>
+            <!-- New "All my links" button -->
+            <button id="all-links-button" class="inline-flex items-center justify-center px-8 py-4 rounded-full gradient-button text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out text-xl tracking-wide">
+                All my links <i class="fas fa-link ml-3"></i>
+            </button>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-20 px-4 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
-        <div class="container mx-auto max-w-4xl p-8 glassy">
-            <h2 class="text-4xl font-bold text-center mb-10 text-indigo-700 dark:text-violet-300">About Me</h2>
-            <div class="flex flex-col md:flex-row items-center md:space-x-8">
-                <div class="md:w-1/3 mb-8 md:mb-0">
-                    <img src="https://placehold.co/300x300/6366f1/ffffff?text=Your+Photo" alt="Your Photo" class="rounded-full w-48 h-48 mx-auto object-cover shadow-lg border-4 border-indigo-300 dark:border-violet-600">
-                </div>
-                <div class="md:w-2/3 text-lg leading-relaxed">
-                    <p class="mb-4">
-                        Hello! I'm <span class="font-semibold text-indigo-600 dark:text-violet-400">Your Name</span>, a dedicated web developer with a passion for crafting engaging and user-friendly digital experiences. My journey into web development began several years ago, driven by a curiosity to understand how the internet works and a desire to build things that impact people.
-                    </p>
-                    <p class="mb-4">
-                        I specialize in front-end development, bringing designs to life with clean, efficient, and responsive code. I love tackling new challenges and continuously learning about the latest technologies and best practices in the ever-evolving web landscape.
-                    </p>
-                    <p>
-                        When I'm not coding, you can find me exploring new hiking trails, experimenting with photography, or diving into a good book. I believe in a balanced life that fuels creativity and problem-solving both inside and outside of work.
-                    </p>
-                </div>
-            </div>
+    <section id="about" class="relative z-10 py-20 px-4 w-full max-w-4xl mx-auto">
+        <div class="glassy p-10 text-center">
+            <h2 class="text-4xl font-bold mb-8 gradient-text tracking-wide">About The Architect</h2>
+            <p class="text-xl leading-relaxed text-gray-200 dark:text-gray-300 mb-10">
+                Welcome to my domain. This space represents a convergence of my diverse pursuits and the digital extensions of my intellect. I navigate the realms of knowledge, creativity, and strategic engagement, constantly evolving and expanding my capabilities.
+            </p>
+            <!-- Removed Social Media Links from here as requested -->
         </div>
     </section>
 
-    <!-- Skills Section -->
-    <section id="skills" class="py-20 px-4 bg-white dark:bg-gray-900 transition-colors duration-300">
-        <div class="container mx-auto max-w-6xl p-8">
-            <h2 class="text-4xl font-bold text-center mb-10 text-indigo-700 dark:text-violet-300">My Skills</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                <!-- Skill Card 1 -->
-                <div class="glassy p-6 text-center transform hover:scale-105 transition-transform duration-300 shadow-md hover:shadow-xl">
-                    <i class="fab fa-html5 text-6xl text-orange-500 mb-4"></i>
-                    <h3 class="text-2xl font-semibold mb-2">HTML5</h3>
-                    <p class="text-gray-700 dark:text-gray-300">Semantic markup and accessible web structures.</p>
-                </div>
-                <!-- Skill Card 2 -->
-                <div class="glassy p-6 text-center transform hover:scale-105 transition-transform duration-300 shadow-md hover:shadow-xl">
-                    <i class="fab fa-css3-alt text-6xl text-blue-500 mb-4"></i>
-                    <h3 class="text-2xl font-semibold mb-2">CSS3 & Tailwind CSS</h3>
-                    <p class="text-gray-700 dark:text-gray-300">Modern styling with responsive and utility-first frameworks.</p>
-                </div>
-                <!-- Skill Card 3 -->
-                <div class="glassy p-6 text-center transform hover:scale-105 transition-transform duration-300 shadow-md hover:shadow-xl">
-                    <i class="fab fa-js-square text-6xl text-yellow-500 mb-4"></i>
-                    <h3 class="text-2xl font-semibold mb-2">JavaScript (ES6+)</h3>
-                    <p class="text-gray-700 dark:text-gray-300">Dynamic interactions and client-side logic.</p>
-                </div>
-                <!-- Skill Card 4 -->
-                <div class="glassy p-6 text-center transform hover:scale-105 transition-transform duration-300 shadow-md hover:shadow-xl">
-                    <i class="fab fa-react text-6xl text-blue-400 mb-4"></i>
-                    <h3 class="text-2xl font-semibold mb-2">React.js</h3>
-                    <p class="text-gray-700 dark:text-gray-300">Building robust and scalable user interfaces.</p>
-                </div>
-                <!-- Skill Card 5 -->
-                <div class="glassy p-6 text-center transform hover:scale-105 transition-transform duration-300 shadow-md hover:shadow-xl">
-                    <i class="fab fa-node-js text-6xl text-green-500 mb-4"></i>
-                    <h3 class="text-2xl font-semibold mb-2">Node.js</h3>
-                    <p class="text-gray-700 dark:text-gray-300">Server-side development and API creation.</p>
-                </div>
-                <!-- Skill Card 6 -->
-                <div class="glassy p-6 text-center transform hover:scale-105 transition-transform duration-300 shadow-md hover:shadow-xl">
-                    <i class="fas fa-database text-6xl text-gray-500 mb-4"></i>
-                    <h3 class="text-2xl font-semibold mb-2">Databases (SQL/NoSQL)</h3>
-                    <p class="text-gray-700 dark:text-gray-300">Data management and integration.</p>
-                </div>
-                <!-- Skill Card 7 -->
-                <div class="glassy p-6 text-center transform hover:scale-105 transition-transform duration-300 shadow-md hover:shadow-xl">
-                    <i class="fab fa-git-alt text-6xl text-red-600 mb-4"></i>
-                    <h3 class="text-2xl font-semibold mb-2">Git & GitHub</h3>
-                    <p class="text-gray-700 dark:text-gray-300">Version control and collaborative development.</p>
-                </div>
-                <!-- Skill Card 8 -->
-                <div class="glassy p-6 text-center transform hover:scale-105 transition-transform duration-300 shadow-md hover:shadow-xl">
-                    <i class="fas fa-mobile-alt text-6xl text-purple-500 mb-4"></i>
-                    <h3 class="text-2xl font-semibold mb-2">Responsive Design</h3>
-                    <p class="text-gray-700 dark:text-gray-300">Building sites for all devices and screen sizes.</p>
+    <!-- Links Section (Main Content) - Now "Connect with Emon" -->
+    <section id="links" class="relative z-10 py-20 px-4 w-full max-w-3xl mx-auto">
+        <h2 class="text-4xl font-bold text-center mb-12 gradient-text tracking-wide">Connect with Emon</h2> <!-- Title here is "Connect with Emon" -->
+        <div class="grid grid-cols-1 gap-8">
+            <!-- Customizable Link Card 1: Instagram -->
+            <div class="link-card glassy">
+                <a href="https://instagram.com/yourusername" target="_blank" rel="noopener noreferrer"></a>
+                <div class="link-card-content">
+                    <i class="fab fa-instagram social-icon-in-card text-pink-500"></i> <!-- Icon added here -->
+                    <h3>Instagram Profile</h3>
+                    <p>My curated visual archives and moments.</p>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="py-20 px-4 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
-        <div class="container mx-auto max-w-6xl p-8">
-            <h2 class="text-4xl font-bold text-center mb-10 text-indigo-700 dark:text-violet-300">My Portfolio</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Portfolio Item 1 -->
-                <div class="relative portfolio-card glassy rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                    <img src="https://placehold.co/600x400/6366f1/ffffff?text=Project+1" alt="Project 1" class="w-full h-64 object-cover">
-                    <div class="portfolio-card-overlay">
-                        <h3 class="text-white text-2xl font-bold mb-2">Project Title One</h3>
-                        <p class="text-gray-200 text-lg mb-4">A brief description of this amazing project.</p>
-                        <a href="#" class="text-indigo-300 hover:text-indigo-100 font-semibold transition-colors duration-300">View Project <i class="fas fa-external-link-alt ml-1"></i></a>
-                    </div>
-                </div>
-                <!-- Portfolio Item 2 -->
-                <div class="relative portfolio-card glassy rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                    <img src="https://placehold.co/600x400/8b5cf6/ffffff?text=Project+2" alt="Project 2" class="w-full h-64 object-cover">
-                    <div class="portfolio-card-overlay">
-                        <h3 class="text-white text-2xl font-bold mb-2">Project Title Two</h3>
-                        <p class="text-gray-200 text-lg mb-4">Another fantastic project demonstrating my skills.</p>
-                        <a href="#" class="text-indigo-300 hover:text-indigo-100 font-semibold transition-colors duration-300">View Project <i class="fas fa-external-link-alt ml-1"></i></a>
-                    </div>
-                </div>
-                <!-- Portfolio Item 3 -->
-                <div class="relative portfolio-card glassy rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                    <img src="https://placehold.co/600x400/a78bfa/ffffff?text=Project+3" alt="Project 3" class="w-full h-64 object-cover">
-                    <div class="portfolio-card-overlay">
-                        <h3 class="text-white text-2xl font-bold mb-2">Project Title Three</h3>
-                        <p class="text-gray-200 text-lg mb-4">This project showcases my problem-solving abilities.</p>
-                        <a href="#" class="text-indigo-300 hover:text-indigo-100 font-semibold transition-colors duration-300">View Project <i class="fas fa-external-link-alt ml-1"></i></a>
-                    </div>
-                </div>
-                <!-- Portfolio Item 4 -->
-                <div class="relative portfolio-card glassy rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                    <img src="https://placehold.co/600x400/c4b5fd/ffffff?text=Project+4" alt="Project 4" class="w-full h-64 object-cover">
-                    <div class="portfolio-card-overlay">
-                        <h3 class="text-white text-2xl font-bold mb-2">Project Title Four</h3>
-                        <p class="text-gray-200 text-lg mb-4">A creative project with a unique design.</p>
-                        <a href="#" class="text-indigo-300 hover:text-indigo-100 font-semibold transition-colors duration-300">View Project <i class="fas fa-external-link-alt ml-1"></i></a>
-                    </div>
-                </div>
-                <!-- Portfolio Item 5 -->
-                <div class="relative portfolio-card glassy rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                    <img src="https://placehold.co/600x400/e0e7ff/6366f1?text=Project+5" alt="Project 5" class="w-full h-64 object-cover">
-                    <div class="portfolio-card-overlay">
-                        <h3 class="text-white text-2xl font-bold mb-2">Project Title Five</h3>
-                        <p class="text-gray-200 text-lg mb-4">Showcasing my full-stack capabilities.</p>
-                        <a href="#" class="text-indigo-300 hover:text-indigo-100 font-semibold transition-colors duration-300">View Project <i class="fas fa-external-link-alt ml-1"></i></a>
-                    </div>
-                </div>
-                <!-- Portfolio Item 6 -->
-                <div class="relative portfolio-card glassy rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                    <img src="https://placehold.co/600x400/f3f4f6/6366f1?text=Project+6" alt="Project 6" class="w-full h-64 object-cover">
-                    <div class="portfolio-card-overlay">
-                        <h3 class="text-white text-2xl font-bold mb-2">Project Title Six</h3>
-                        <p class="text-gray-200 text-lg mb-4">A collaborative project I'm proud of.</p>
-                        <a href="#" class="text-indigo-300 hover:text-indigo-100 font-semibold transition-colors duration-300">View Project <i class="fas fa-external-link-alt ml-1"></i></a>
-                    </div>
+            <!-- Customizable Link Card 2: X (Twitter) -->
+            <div class="link-card glassy">
+                <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer"></a>
+                <div class="link-card-content">
+                    <i class="fab fa-twitter social-icon-in-card text-blue-400"></i> <!-- Icon added here -->
+                    <h3>X (Twitter) Feed</h3>
+                    <p>My real-time insights and digital dialogues.</p>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 px-4 bg-white dark:bg-gray-900 transition-colors duration-300">
-        <div class="container mx-auto max-w-3xl p-8 glassy">
-            <h2 class="text-4xl font-bold text-center mb-10 text-indigo-700 dark:text-violet-300">Get in Touch</h2>
-            <form id="contact-form" class="space-y-6">
-                <div>
-                    <label for="name" class="block text-lg font-medium mb-2">Name</label>
-                    <input type="text" id="name" name="name" required class="w-full p-3 rounded-lg input-glassy focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-400">
+            <!-- Customizable Link Card 3: YouTube -->
+            <div class="link-card glassy">
+                <a href="https://youtube.com/yourchannel" target="_blank" rel="noopener noreferrer"></a>
+                <div class="link-card-content">
+                    <i class="fab fa-youtube social-icon-in-card text-red-600"></i> <!-- Icon added here -->
+                    <h3>YouTube Channel</h3>
+                    <p>My multimedia creations and explorations.</p>
                 </div>
-                <div>
-                    <label for="email" class="block text-lg font-medium mb-2">Email</label>
-                    <input type="email" id="email" name="email" required class="w-full p-3 rounded-lg input-glassy focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-400">
+            </div>
+
+            <!-- Customizable Link Card 4: Facebook -->
+            <div class="link-card glassy">
+                <a href="https://facebook.com/yourusername" target="_blank" rel="noopener noreferrer"></a>
+                <div class="link-card-content">
+                    <i class="fab fa-facebook social-icon-in-card text-blue-600"></i> <!-- Icon added here -->
+                    <h3>Facebook Page</h3>
+                    <p>Connect within my private digital network.</p>
                 </div>
-                <div>
-                    <label for="message" class="block text-lg font-medium mb-2">Message</label>
-                    <textarea id="message" name="message" rows="6" required class="w-full p-3 rounded-lg input-glassy focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-violet-400"></textarea>
+            </div>
+
+            <!-- Customizable Link Card 5: Discord (Example - adjust as needed) -->
+            <div class="link-card glassy">
+                <a href="https://discord.gg/yourinvite" target="_blank" rel="noopener noreferrer"></a>
+                <div class="link-card-content">
+                    <i class="fab fa-discord social-icon-in-card text-indigo-500"></i> <!-- Icon added here -->
+                    <h3>Discord Server</h3>
+                    <p>Join my community discussions.</p>
                 </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-violet-400 dark:to-pink-500 text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out">
-                    Send Message <i class="fas fa-paper-plane ml-2"></i>
-                </button>
-            </form>
-            <!-- Message Box for form submission -->
-            <div id="form-message" class="mt-8 p-4 rounded-lg text-center hidden" role="alert"></div>
+            </div>
+
+            <!-- Customizable Link Card 6: Email -->
+            <div class="link-card glassy">
+                <a href="mailto:your.email@example.com"></a>
+                <div class="link-card-content">
+                    <i class="fas fa-envelope social-icon-in-card text-gray-400"></i> <!-- Icon added here -->
+                    <h3>Direct Email</h3>
+                    <p>Initiate a secure communication channel.</p>
+                </div>
+            </div>
+
+            <!-- Add more customizable link cards here as needed -->
+
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-8 px-4 text-center bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors duration-300">
+    <footer class="relative z-10 py-10 px-4 text-center bg-transparent text-gray-500 transition-colors duration-300 mt-auto">
         <div class="container mx-auto">
-            <p>&copy; 2025 Your Name. All rights reserved.</p>
-            <div class="flex justify-center space-x-6 mt-4">
-                <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-violet-400 transition-colors duration-300 text-2xl"><i class="fab fa-linkedin"></i></a>
-                <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-violet-400 transition-colors duration-300 text-2xl"><i class="fab fa-github"></i></a>
-                <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-violet-400 transition-colors duration-300 text-2xl"><i class="fab fa-twitter"></i></a>
-            </div>
+            <!-- Copyright to Emon -->
+            <p class="text-lg">&copy; 2025 Emon. All Rights Reserved. Engineered by Intelligence.</p>
         </div>
     </footer>
+
+    <!-- Gemini Assistant Modal -->
+    <div id="gemini-modal-overlay" class="modal-overlay">
+        <div class="gemini-modal">
+            <div class="modal-header">
+                <span><i class="fas fa-robot mr-2"></i> Your Digital Assistant</span>
+                <button id="modal-close-button" class="modal-close-button">&times;</button>
+            </div>
+            <div id="chat-history" class="chat-history">
+                <!-- Chat messages will be appended here -->
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" class="chat-input" placeholder="How may I assist you, Sovereign?">
+                <button id="chat-send-button" class="chat-send-button">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Typed.js CDN -->
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
@@ -435,6 +699,30 @@
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
     <script>
+        // Set initial RGB values for CSS variables based on current theme
+        function setRgbVariables(isDarkMode) {
+            const body = document.body;
+            if (isDarkMode) {
+                body.classList.remove('light-mode-rgb');
+                body.classList.add('dark-mode-rgb');
+            } else {
+                body.classList.remove('dark-mode-rgb');
+                body.classList.add('light-mode-rgb');
+            }
+            // Also update the gradient colors for particles.js if it's already loaded
+            if (typeof particlesJS !== 'undefined' && particlesJS.particlesData && particlesJS.particlesData.length > 0 && particlesJS.particlesData[0].particles) {
+                const currentParticles = particlesJS.particlesData[0].particles;
+                if (isDarkMode) {
+                    currentParticles.color.value = ["#8affd1", "#c4b5fd", "#00eaff", "#a78bfa", "#00c6ff"]; // Dark mode colors
+                    currentParticles.line_linked.color = "#4a90e2"; // Dark mode line color
+                } else {
+                    currentParticles.color.value = ["#00eaff", "#a78bfa", "#8affd1", "#c4b5fd", "#00c6ff"]; // Light mode colors
+                    currentParticles.line_linked.color = "#4a90e2"; // Light mode line color
+                }
+                particlesJS.fn.particlesRefresh(); // Refresh particles to apply new colors
+            }
+        }
+
         // Preloader Logic
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
@@ -442,7 +730,7 @@
                 preloader.style.opacity = '0';
                 setTimeout(() => {
                     preloader.style.display = 'none';
-                }, 500); // Wait for fade-out transition
+                }, 700);
             }
         });
 
@@ -456,92 +744,86 @@
             }
         });
 
-        // Typed.js Initialization for Hero Section
+        // Typed.js Initialization
         document.addEventListener('DOMContentLoaded', () => {
             const typedTextElement = document.getElementById('typed-text');
             if (typedTextElement) {
                 new Typed(typedTextElement, {
-                    strings: ["Web Developer", "Designer", "Innovator", "Problem Solver"],
-                    typeSpeed: 70,
-                    backSpeed: 40,
+                    strings: ["a student", "a creator", "a gamer", "an explorer of frontiers"],
+                    typeSpeed: 60,
+                    backSpeed: 30,
                     loop: true,
                     showCursor: true,
-                    cursorChar: '|',
+                    cursorChar: '█',
                     autoInsertCss: true,
                 });
             }
         });
 
-        // Particles.js Initialization for Hero Section
-        // Ensure particles.js is loaded before initializing
+        // Particles.js Initialization
         window.onload = function() {
             if (typeof particlesJS !== 'undefined') {
                 particlesJS('particles-js', {
                     "particles": {
                         "number": {
-                            "value": 80,
+                            "value": 250,
                             "density": {
                                 "enable": true,
-                                "value_area": 800
+                                "value_area": 2000
                             }
                         },
                         "color": {
-                            "value": "#ffffff"
+                            "value": ["#00eaff", "#a78bfa", "#8affd1", "#c4b5fd", "#00c6ff"]
                         },
                         "shape": {
-                            "type": "circle",
+                            "type": ["circle", "polygon"],
                             "stroke": {
                                 "width": 0,
                                 "color": "#000000"
                             },
                             "polygon": {
-                                "nb_sides": 5
-                            },
-                            "image": {
-                                "src": "img/github.svg",
-                                "width": 100,
-                                "height": 100
+                                "nb_sides": 6
                             }
                         },
                         "opacity": {
-                            "value": 0.5,
-                            "random": false,
+                            "value": 0.6,
+                            "random": true,
                             "anim": {
-                                "enable": false,
-                                "speed": 1,
-                                "opacity_min": 0.1,
+                                "enable": true,
+                                "speed": 0.8,
+                                "opacity_min": 0.2,
                                 "sync": false
                             }
                         },
                         "size": {
-                            "value": 3,
+                            "value": 2,
                             "random": true,
                             "anim": {
-                                "enable": false,
-                                "speed": 40,
-                                "size_min": 0.1,
+                                "enable": true,
+                                "speed": 1.5,
+                                "size_min": 0.5,
                                 "sync": false
                             }
                         },
                         "line_linked": {
                             "enable": true,
-                            "distance": 150,
-                            "color": "#ffffff",
+                            "distance": 100,
+                            "color": "#4a90e2",
                             "opacity": 0.4,
-                            "width": 1
+                            "width": 1.2
                         },
                         "move": {
                             "enable": true,
-                            "speed": 6,
+                            "speed": 1.5,
                             "direction": "none",
-                            "random": false,
+                            "random": true,
                             "straight": false,
                             "out_mode": "out",
                             "bounce": false,
                             "attract": {
-                                "enable": false,
-                                "rotateX": 600,
-                                "rotateY": 1200
+                                "enable": true,
+                                "rotateX": 400,
+                                "rotateY": 800
                             }
                         }
                     },
@@ -560,20 +842,20 @@
                         },
                         "modes": {
                             "grab": {
-                                "distance": 140,
+                                "distance": 180,
                                 "line_linked": {
                                     "opacity": 1
                                 }
                             },
                             "bubble": {
-                                "distance": 400,
-                                "size": 40,
+                                "distance": 250,
+                                "size": 30,
                                 "duration": 2,
                                 "opacity": 8,
                                 "speed": 3
                             },
                             "repulse": {
-                                "distance": 200,
+                                "distance": 120,
                                 "duration": 0.4
                             },
                             "push": {
@@ -589,77 +871,219 @@
             } else {
                 console.error("particles.js not loaded.");
             }
+            // Ensure initial RGB variables are set correctly based on the default theme
+            setRgbVariables(document.documentElement.classList.contains('dark'));
         };
 
 
         // Dark/Light Mode Toggle
         const themeToggle = document.getElementById('theme-toggle');
-        const htmlElement = document.documentElement; // This is the <html> tag
+        const htmlElement = document.documentElement;
 
-        // Check for saved theme preference or default to light
-        const currentTheme = localStorage.getItem('theme');
-        if (currentTheme === 'dark') {
-            htmlElement.classList.add('dark');
-        } else {
-            htmlElement.classList.remove('dark');
-        }
+        // Set initial theme to dark by default
+        htmlElement.classList.add('dark');
+        setRgbVariables(true);
+        localStorage.setItem('theme', 'dark');
 
         themeToggle.addEventListener('click', () => {
             htmlElement.classList.toggle('dark');
-            // Save preference to localStorage
-            if (htmlElement.classList.contains('dark')) {
+            const isDarkMode = htmlElement.classList.contains('dark');
+            setRgbVariables(isDarkMode);
+            if (isDarkMode) {
                 localStorage.setItem('theme', 'dark');
             } else {
                 localStorage.setItem('theme', 'light');
             }
         });
 
-        // Mobile Menu Toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const closeMobileMenuButton = document.getElementById('close-mobile-menu');
-        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+        /* Gemini Assistant Functionality */
+        const askEmonButton = document.getElementById('ask-emon-button');
+        const allLinksButton = document.getElementById('all-links-button');
+        const geminiModalOverlay = document.getElementById('gemini-modal-overlay');
+        const modalCloseButton = document.getElementById('modal-close-button');
+        const chatHistoryDiv = document.getElementById('chat-history');
+        const chatInput = document.getElementById('chat-input');
+        const chatSendButton = document.getElementById('chat-send-button');
 
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.remove('hidden');
-            mobileMenu.classList.add('flex');
+        let chatHistory = []; // Stores the conversation history for the API
+
+        // Emon's details - UPDATED FOR CLARITY AND API USE
+        const emonDetails = {
+            name: "Emon",
+            roles: "a student, a creator, and a gamer", // Used for Typed.js
+            relationshipStatus: "Emon does not currently have a girlfriend, as he is still a student. He finds that relationships often lead to heartbreak. He is loyal to his future Queen and maintains distance from girls for this reason.",
+            birthday: "Emon's birthday is on the 3rd of any month.",
+            girlType: "Emon's ideal partner has an 'empty past' (meaning never been in a relationship or no ex-partners) and knows how to cook. He values good manners and a supportive nature above physical appearance or any other superficial traits.",
+            hobbies: "Emon likes to play video games, especially shooting games. His favorite game is Free Fire.", // New info
+            smoking: "Emon is not engaged with any smoking or related things." // New info
+        };
+
+        // Function to add a message to the chat history UI
+        function addMessageToChat(message, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-bubble', sender);
+            messageDiv.textContent = message;
+            chatHistoryDiv.appendChild(messageDiv);
+            chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
+        }
+
+        // Define the dynamic identity responses for the AI itself (no roles here, no "large language model")
+        const aiIdentityResponses = [
+            `Hello Mr/Miss, I am a digital assistant created by ${emonDetails.name}. If you want to know anything about him like - hobbies, preferences, or want to chat with me, just ask.`,
+            `Greetings. I am a digital assistant, brought into existence by ${emonDetails.name}. Feel free to inquire about his interests, preferences, or engage in conversation.`,
+            `You are speaking with a digital assistant, designed by ${emonDetails.name}. I can provide insights into his passions, preferences, or simply chat with you.`,
+            `My core programming was established by ${emonDetails.name}. Should you wish to learn about his hobbies, preferences, or just converse, I am here to assist.`,
+            `I was created by Google to assist Emon and provide information about him.` // More direct answer for "who created you"
+        ];
+
+        // Function to get a random AI identity response
+        function getRandomAiIdentityResponse() {
+            const randomIndex = Math.floor(Math.random() * aiIdentityResponses.length);
+            return aiIdentityResponses[randomIndex];
+        }
+
+        // Handle "Ask me about Emon" button click (central AI trigger)
+        askEmonButton.addEventListener('click', () => {
+            geminiModalOverlay.classList.add('active');
+            chatHistoryDiv.innerHTML = ''; // Clear previous chat
+            chatHistory = []; // Clear chat history array
+
+            // AI immediately provides its Emon-centric introduction
+            const initialGreeting = getRandomAiIdentityResponse();
+            addMessageToChat(initialGreeting, 'ai');
+            chatHistory.push({ role: "model", parts: [{ text: initialGreeting }] });
+
+            chatInput.focus();
         });
 
-        closeMobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.add('hidden');
-            mobileMenu.classList.remove('flex');
+        // Handle "All my links" button click
+        allLinksButton.addEventListener('click', () => {
+            document.getElementById('links').scrollIntoView({ behavior: 'smooth' });
         });
 
-        // Close mobile menu when a link is clicked
-        mobileNavLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-                mobileMenu.classList.remove('flex');
-            });
+        // Close Modal
+        modalCloseButton.addEventListener('click', () => {
+            geminiModalOverlay.classList.remove('active');
         });
 
-        // Contact Form Submission (Client-side only)
-        const contactForm = document.getElementById('contact-form');
-        const formMessage = document.getElementById('form-message');
+        // Send Message to Gemini API
+        async function sendMessageToGemini() {
+            const prompt = chatInput.value.trim();
+            if (prompt === '') return;
 
-        contactForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent actual form submission
+            addMessageToChat(prompt, 'user');
+            const lowerCasePrompt = prompt.toLowerCase();
 
-            // Simulate form submission success
-            formMessage.classList.remove('hidden');
-            formMessage.classList.remove('bg-red-100', 'text-red-700'); // Clear any previous error styles
-            formMessage.classList.add('bg-green-100', 'text-green-700');
-            formMessage.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Your message has been sent successfully!';
-            
-            // Clear form fields
-            contactForm.reset();
+            // Keywords that trigger specific Emon details via Gemini API
+            const relationshipKeywords = ["girlfriend", "relationship", "single", "married", "partner", "love life", "gf"];
+            const birthdayKeywords = ["birthday", "birth date", "born", "bday"];
+            const girlTypeKeywords = ["type in girl", "ideal girl", "girl type", "preferences in girl", "what kind of girl", "dream girl"];
+            const contactKeywords = ["contact", "reach out", "get in touch", "how to contact me", "how can I contact", "contact emon"];
+            const hobbiesKeywords = ["hobbies", "games", "favorite game", "free fire", "shooting games", "what does he like to do"]; // New keywords
+            const smokingKeywords = ["smoking", "smoke", "cigarettes", "vape", "drugs"]; // New keywords
+            const aiIdentityKeywords = ["who are you", "what are you", "your creator", "who made you", "where are you from", "who created you", "your origin", "about you", "google created you"]; // Added "google created you"
 
-            // Hide message after a few seconds
-            setTimeout(() => {
-                formMessage.classList.add('hidden');
-            }, 5000);
+            chatInput.value = '';
+            chatSendButton.disabled = true;
+
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.classList.add('loading-indicator');
+            loadingIndicator.innerHTML = '<span>AI is thinking</span><span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+            chatHistoryDiv.appendChild(loadingIndicator);
+            chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
+
+            let geminiApiContents = [];
+            let isEmonSpecificQuestion = false;
+
+            // Handle AI identity questions first (local response, no Gemini call for this)
+            if (aiIdentityKeywords.some(keyword => lowerCasePrompt.includes(keyword))) {
+                loadingIndicator.remove();
+                const aiResponse = getRandomAiIdentityResponse();
+                addMessageToChat(aiResponse, 'ai');
+                chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
+                chatSendButton.disabled = false;
+                chatInput.focus();
+                return;
+            }
+
+            // Construct the comprehensive facts about Emon for the AI
+            const allEmonFacts = `
+Emon's relationship status is: "${emonDetails.relationshipStatus}"
+Emon's birthday is: "${emonDetails.birthday}"
+Emon's ideal partner has these qualities: "${emonDetails.girlType}"
+Emon's hobbies include: "${emonDetails.hobbies}"
+Regarding smoking: "${emonDetails.smoking}"
+You can contact Emon via: "${emonDetails.contact}"
+`;
+
+            // Determine if the question is about Emon's specific details and formulate the prompt
+            if (relationshipKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
+                birthdayKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
+                girlTypeKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
+                hobbiesKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
+                smokingKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
+                contactKeywords.some(keyword => lowerCasePrompt.includes(keyword))) {
+                isEmonSpecificQuestion = true;
+
+                // For Emon-specific questions, provide the facts and ask for a natural response.
+                const emonSpecificInstruction = `You are a digital assistant for Emon. Your goal is to answer the user's question about Emon. Based *only* on the following facts about Emon, please provide a natural, conversational, and friendly response. Do not simply repeat the facts verbatim. Rephrase them in a helpful and engaging way. If the information is not explicitly provided in these facts, state that you don't have that specific detail about Emon. Do not invent details or refer to yourself as a large language model.`;
+
+                geminiApiContents.push({ role: "user", parts: [{ text: emonSpecificInstruction + "\n\nFacts about Emon:\n" + allEmonFacts + "\n\nUser's question: " + prompt }] });
+
+            } else {
+                // For general questions, send the current chat history to Gemini for a general response.
+                // This allows Gemini to act as a general AI (like Google's AI).
+                // We'll also include a general instruction for the AI's persona.
+                const generalAiInstruction = `You are a helpful AI assistant. Please answer the user's question to the best of your ability.`;
+                geminiApiContents.push({ role: "user", parts: [{ text: generalAiInstruction }] }); // Initial instruction
+                geminiApiContents = geminiApiContents.concat(chatHistory.map(msg => ({ role: msg.role, parts: msg.parts })));
+                geminiApiContents.push({ role: "user", parts: [{ text: prompt }] }); // Add the current user prompt
+            }
+
+            try {
+                const apiKey = "AIzaSyAyKPocbERL1XmrzTkR73306yAwpIPdxPY"; // Your provided API key
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: geminiApiContents })
+                });
+
+                const result = await response.json();
+
+                let aiResponse = "My apologies, I could not process that request at this moment. Please try again.";
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    aiResponse = result.candidates[0].content.parts[0].text;
+                } else {
+                    console.error("Gemini API response structure unexpected:", result);
+                    aiResponse = "I'm sorry, I couldn't find a clear answer to that. Perhaps I can help with something else?";
+                }
+
+                loadingIndicator.remove();
+                addMessageToChat(aiResponse, 'ai');
+                chatHistory.push({ role: "model", parts: [{ text: aiResponse }] }); // Add AI's response to history
+                chatSendButton.disabled = false;
+                chatInput.focus();
+
+            } catch (error) {
+                console.error("Error communicating with Gemini API:", error);
+                loadingIndicator.remove();
+                addMessageToChat("An error occurred while connecting to the assistant. Please check your network.", 'ai');
+                chatSendButton.disabled = false;
+                chatInput.focus();
+            }
+        }
+
+        // Event listeners for sending messages
+        chatSendButton.addEventListener('click', sendMessageToGemini);
+        chatInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                sendMessageToGemini();
+            }
         });
     </script>
 </body>
 </html>
-
