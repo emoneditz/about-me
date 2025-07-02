@@ -216,6 +216,14 @@
             transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease;
             min-height: 120px;
             overflow: hidden;
+            opacity: 0; /* Initially hidden for fade-in effect */
+            transform: translateY(20px); /* Initially slightly below for fade-in effect */
+            transition: opacity 1.2s ease-out, transform 1.2s ease-out; /* Smoother transition */
+        }
+
+        .link-card.fade-in {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .link-card::before {
@@ -241,67 +249,70 @@
             box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
         }
 
-        .link-card a {
-            display: block;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            text-decoration: none;
-            color: inherit;
-            z-index: 2;
-        }
-
-        .link-card-content {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-        }
-
-        .link-card-content h3 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            color: var(--text-color-dark);
-            transition: color 0.3s ease;
-            letter-spacing: 0.025em;
-        }
-
-        html.dark .link-card-content h3 {
-            color: var(--text-color-dark);
-        }
-
-        .link-card-content p {
-            font-size: 1.1rem;
-            color: var(--text-color-dark);
-            opacity: 0.7;
-            transition: color 0.3s ease, opacity 0.3s ease;
-        }
-
-        html.dark .link-card-content p {
-            color: var(--text-color-dark);
-        }
-
-        .link-card:hover .link-card-content h3,
-        .link-card:hover .link-card-content p {
-            color: var(--primary-glow);
-        }
-
         /* Social icon within link card */
         .link-card .social-icon-in-card {
             font-size: 3rem; /* Adjust size as needed */
             margin-bottom: 1rem;
             color: var(--primary-glow); /* Example color, can be customized per icon */
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, transform 0.4s ease; /* Added transform for spinning */
         }
         .link-card:hover .social-icon-in-card {
             color: var(--secondary-glow); /* Change color on hover */
+            transform: rotateY(360deg); /* Spin effect */
+        }
+
+        /* Button container for slide effect */
+        .link-card-button-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
+            transform: translateY(100%); /* Start off-screen */
+            opacity: 0;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+            z-index: 3; /* Ensure button is above other content */
+        }
+
+        .link-card:hover .link-card-button-container {
+            transform: translateY(0); /* Slide up */
+            opacity: 1;
+        }
+
+        .link-card-button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px; /* Fully rounded */
+            font-weight: 600;
+            text-decoration: none;
+            color: white;
+            background-image: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+        }
+
+        .link-card-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 198, 255, 0.5);
+        }
+        html.dark .link-card-button {
+            box-shadow: 0 4px 15px rgba(138, 255, 209, 0.3);
+        }
+        html.dark .link-card-button:hover {
+            box-shadow: 0 6px 20px rgba(138, 255, 209, 0.5);
+        }
+
+        /* Adjust content positioning when button container is present */
+        .link-card-content {
+            padding-bottom: 3rem; /* Make space for the button */
         }
 
 
@@ -536,6 +547,77 @@
             0%, 80%, 100% { transform: scale(0); }
             40% { transform: scale(1.0); }
         }
+
+        /* Custom Modal for "Link Not Added" */
+        .custom-alert-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001; /* Higher than Gemini modal */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .custom-alert-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-alert-modal {
+            background-color: var(--modal-bg-dark);
+            border: 1px solid var(--border-color-dark);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.01);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .custom-alert-modal-overlay.active .custom-alert-modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .custom-alert-modal h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-glow);
+            margin-bottom: 1rem;
+        }
+
+        .custom-alert-modal p {
+            font-size: 1.1rem;
+            color: var(--text-color-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .custom-alert-modal-button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            background-image: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+        .custom-alert-modal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(var(--primary-glow-rgb), 0.4);
+        }
     </style>
 </head>
 <body class="relative dark-mode-rgb"> <!-- Default to dark-mode-rgb -->
@@ -602,61 +684,99 @@
         <div class="grid grid-cols-1 gap-8">
             <!-- Customizable Link Card 1: Instagram -->
             <div class="link-card glassy">
-                <a href="https://instagram.com/yourusername" target="_blank" rel="noopener noreferrer"></a>
                 <div class="link-card-content">
-                    <i class="fab fa-instagram social-icon-in-card text-pink-500"></i> <!-- Icon added here -->
+                    <i class="fab fa-instagram social-icon-in-card text-pink-500"></i>
                     <h3>Instagram Profile</h3>
                     <p>My curated visual archives and moments.</p>
+                </div>
+                <div class="link-card-button-container">
+                    <a href="https://www.instagram.com/emon_editz69?igsh=dXY3em5ndjFrczd5" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
+                        Visit Profile <i class="fab fa-instagram ml-2"></i> <!-- Changed icon -->
+                    </a>
                 </div>
             </div>
 
             <!-- Customizable Link Card 2: X (Twitter) -->
             <div class="link-card glassy">
-                <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer"></a>
                 <div class="link-card-content">
-                    <i class="fab fa-twitter social-icon-in-card text-blue-400"></i> <!-- Icon added here -->
+                    <i class="fab fa-twitter social-icon-in-card text-blue-400"></i>
                     <h3>X (Twitter) Feed</h3>
                     <p>My real-time insights and digital dialogues.</p>
                 </div>
+                <div class="link-card-button-container">
+                    <a href="https://x.com/emon3xprime" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
+                        Visit Profile <i class="fab fa-twitter ml-2"></i> <!-- Changed icon -->
+                    </a>
+                </div>
             </div>
 
-            <!-- Customizable Link Card 3: YouTube -->
+            <!-- New Customizable Link Card: Pinterest (Moved up) -->
             <div class="link-card glassy">
-                <a href="https://youtube.com/yourchannel" target="_blank" rel="noopener noreferrer"></a>
                 <div class="link-card-content">
-                    <i class="fab fa-youtube social-icon-in-card text-red-600"></i> <!-- Icon added here -->
+                    <i class="fab fa-pinterest social-icon-in-card text-red-700"></i>
+                    <h3>Pinterest Boards</h3>
+                    <p>Explore my visual inspirations.</p>
+                </div>
+                <div class="link-card-button-container">
+                    <a href="https://pin.it/7bdXGMclR" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
+                        Visit Profile <i class="fab fa-pinterest ml-2"></i> <!-- Changed icon -->
+                    </a>
+                </div>
+            </div>
+
+            <!-- Customizable Link Card 3: YouTube (Moved down) -->
+            <div class="link-card glassy">
+                <div class="link-card-content">
+                    <i class="fab fa-youtube social-icon-in-card text-red-600"></i>
                     <h3>YouTube Channel</h3>
                     <p>My multimedia creations and explorations.</p>
+                </div>
+                <div class="link-card-button-container">
+                    <button id="youtube-link-button" class="link-card-button">
+                        Visit Channel <i class="fab fa-youtube ml-2"></i>
+                    </button>
                 </div>
             </div>
 
             <!-- Customizable Link Card 4: Facebook -->
             <div class="link-card glassy">
-                <a href="https://facebook.com/yourusername" target="_blank" rel="noopener noreferrer"></a>
                 <div class="link-card-content">
-                    <i class="fab fa-facebook social-icon-in-card text-blue-600"></i> <!-- Icon added here -->
+                    <i class="fab fa-facebook social-icon-in-card text-blue-600"></i>
                     <h3>Facebook Page</h3>
                     <p>Connect within my private digital network.</p>
                 </div>
-            </div>
-
-            <!-- Customizable Link Card 5: Discord (Example - adjust as needed) -->
-            <div class="link-card glassy">
-                <a href="https://discord.gg/yourinvite" target="_blank" rel="noopener noreferrer"></a>
-                <div class="link-card-content">
-                    <i class="fab fa-discord social-icon-in-card text-indigo-500"></i> <!-- Icon added here -->
-                    <h3>Discord Server</h3>
-                    <p>Join my community discussions.</p>
+                <div class="link-card-button-container">
+                    <a href="https://www.facebook.com/emoneditz69" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
+                        Visit Profile <i class="fab fa-facebook ml-2"></i> <!-- Changed icon -->
+                    </a>
                 </div>
             </div>
 
-            <!-- Customizable Link Card 6: Email -->
+            <!-- Customizable Link Card 5: Discord -->
             <div class="link-card glassy">
-                <a href="mailto:your.email@example.com"></a>
                 <div class="link-card-content">
-                    <i class="fas fa-envelope social-icon-in-card text-gray-400"></i> <!-- Icon added here -->
+                    <i class="fab fa-discord social-icon-in-card text-indigo-500"></i>
+                    <h3>Discord Profile</h3>
+                    <p>Connect with me on Discord.</p>
+                </div>
+                <div class="link-card-button-container">
+                    <a href="https://discordapp.com/users/_emon_" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
+                        Visit Profile <i class="fab fa-discord ml-2"></i> <!-- Changed icon -->
+                    </a>
+                </div>
+            </div>
+
+            <!-- Customizable Link Card 7: Email -->
+            <div class="link-card glassy">
+                <div class="link-card-content">
+                    <i class="fas fa-envelope social-icon-in-card text-gray-400"></i>
                     <h3>Direct Email</h3>
                     <p>Initiate a secure communication channel.</p>
+                </div>
+                <div class="link-card-button-container">
+                    <a href="mailto:annihilation497837@gmail.com" class="link-card-button external-link-button">
+                        Email Me <i class="fas fa-paper-plane ml-2"></i>
+                    </a>
                 </div>
             </div>
 
@@ -689,6 +809,15 @@
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Custom Alert Modal for "Link Not Added" -->
+    <div id="custom-alert-modal-overlay" class="custom-alert-modal-overlay">
+        <div class="custom-alert-modal">
+            <h3>Link Not Added!</h3>
+            <p>Emon's YouTube channel link is not available yet. Please check back later!</p>
+            <button id="custom-alert-close-button" class="custom-alert-modal-button">Okay</button>
         </div>
     </div>
 
@@ -911,8 +1040,8 @@
             name: "Emon",
             roles: "a student, a creator, and a gamer", // Used for Typed.js
             relationshipStatus: "Emon does not currently have a girlfriend, as he is still a student. He finds that relationships often lead to heartbreak. He is loyal to his future Queen and maintains distance from girls for this reason.",
-            birthday: "Emon's birthday is on the 3rd of any month.",
-            girlType: "Emon's ideal partner needs to be supportive, have no ex-partners (an empty past), and possess cooking skills. He does not care about physical appearance, like flair skin.", // Updated with strict wording
+            birthday: "Emon's birthday is on the 3rd day of any month.", // Corrected birthday detail
+            girlType: "Emon is looking for a partner who is supportive, has no ex-partners (an empty past), and has cooking skills. He does not care about physical appearance, like flair skin.", // Updated with strict wording for "what he's looking for"
             hobbies: "Emon likes to play video games, especially shooting games. His favorite game is Free Fire.", // New info
             smoking: "Emon is not engaged with any smoking or related things.", // New info
             contact: "You can contact Emon by asking his AI here or by direct messaging him on Facebook.", // Added contact detail
@@ -969,6 +1098,74 @@
             geminiModalOverlay.classList.remove('active');
         });
 
+        /* Custom Alert Modal Functionality */
+        const customAlertModalOverlay = document.getElementById('custom-alert-modal-overlay');
+        const customAlertCloseButton = document.getElementById('custom-alert-close-button');
+
+        function showCustomAlert() {
+            customAlertModalOverlay.classList.add('active');
+        }
+
+        customAlertCloseButton.addEventListener('click', () => {
+            customAlertModalOverlay.classList.remove('active');
+        });
+
+        // Function to check if an element is fully in viewport
+        function isElementFullyInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        }
+
+        // Universal Link Card Click Handler for scrolling and opening links/alerts
+        document.querySelectorAll('.link-card').forEach(card => {
+            card.addEventListener('click', (event) => {
+                // Check if the click originated from a button within the card
+                const clickedButton = event.target.closest('.link-card-button');
+
+                // Only scroll if the card is NOT fully in viewport
+                if (!isElementFullyInViewport(card)) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+
+                // Handle opening link or showing alert after a short delay if scrolling occurred,
+                // otherwise, immediately if no scroll was needed.
+                const actionDelay = isElementFullyInViewport(card) ? 0 : 400; // No delay if already in view
+
+                setTimeout(() => {
+                    if (clickedButton) { // Only proceed if a button was clicked
+                        if (clickedButton.id === 'youtube-link-button') {
+                            showCustomAlert();
+                        } else if (clickedButton.classList.contains('external-link-button')) {
+                            const href = clickedButton.getAttribute('href');
+                            if (href) {
+                                window.open(href, '_blank');
+                            }
+                        }
+                    }
+                }, actionDelay);
+            });
+        });
+
+
+        // Keywords that trigger specific Emon details via Gemini API
+        const emonSpecificKeywords = [
+            "girlfriend", "relationship", "single", "married", "partner", "love life", "gf",
+            "birthday", "birth date", "born", "bday",
+            "type in girl", "ideal girl", "girl type", "preferences in girl", "what kind of girl", "dream girl", "flair skin", "fair skin", "looking for in a partner",
+            "contact", "reach out", "get in touch", "how to contact me", "how can I contact", "contact emon", "dm me",
+            "hobbies", "games", "favorite game", "free fire", "shooting games", "what does he like to do",
+            "smoking", "smoke", "cigarettes", "vape", "drugs",
+            "crush", "have a crush", "crushes", "love interest", "like anyone", "liked anyone",
+            "brother", "brothers", "family", "siblings", "rimon", "saimon",
+            "dream", "dreams", "wish", "wishes", "goals", "aspirations", "future",
+            "food", "favorite food", "eat", "eating", "cow meat", "biriyani", "biryani"
+        ];
+
         // Send Message to Gemini API
         async function sendMessageToGemini() {
             const prompt = chatInput.value.trim();
@@ -976,19 +1173,6 @@
 
             addMessageToChat(prompt, 'user');
             const lowerCasePrompt = prompt.toLowerCase();
-
-            // Keywords that trigger specific Emon details via Gemini API
-            const relationshipKeywords = ["girlfriend", "relationship", "single", "married", "partner", "love life", "gf"];
-            const birthdayKeywords = ["birthday", "birth date", "born", "bday"];
-            const girlTypeKeywords = ["type in girl", "ideal girl", "girl type", "preferences in girl", "what kind of girl", "dream girl", "flair skin", "fair skin"]; // Added flair/fair skin keywords
-            const contactKeywords = ["contact", "reach out", "get in touch", "how to contact me", "how can I contact", "contact emon", "dm me"];
-            const hobbiesKeywords = ["hobbies", "games", "favorite game", "free fire", "shooting games", "what does he like to do"]; // New keywords
-            const smokingKeywords = ["smoking", "smoke", "cigarettes", "vape", "drugs"]; // New keywords
-            const crushKeywords = ["crush", "have a crush", "crushes", "love interest"]; // New keywords for crush status
-            const familyKeywords = ["brother", "brothers", "family", "siblings", "rimon", "saimon"]; // New keywords for brothers
-            const dreamsKeywords = ["dream", "dreams", "wish", "wishes", "goals", "aspirations", "future"]; // New keywords for dreams and wishes
-            const foodKeywords = ["food", "favorite food", "eat", "eating", "cow meat", "biriyani", "biryani"]; // New keywords for food
-            const aiIdentityKeywords = ["who are you", "what are you", "your creator", "who made you", "where are you from", "who created you", "your origin", "about you"]; // Removed "google created you"
 
             chatInput.value = '';
             chatSendButton.disabled = true;
@@ -1000,9 +1184,9 @@
             chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
 
             let geminiApiContents = [];
-            let isEmonSpecificQuestion = false;
 
             // Handle AI identity questions first (local response, no Gemini call for this)
+            const aiIdentityKeywords = ["who are you", "what are you", "your creator", "who made you", "where are you from", "who created you", "your origin", "about you"];
             if (aiIdentityKeywords.some(keyword => lowerCasePrompt.includes(keyword))) {
                 loadingIndicator.remove();
                 const aiResponse = getRandomAiIdentityResponse();
@@ -1012,6 +1196,9 @@
                 chatInput.focus();
                 return;
             }
+
+            // Check if the prompt contains any Emon-specific keywords
+            const isEmonSpecificQuestion = emonSpecificKeywords.some(keyword => lowerCasePrompt.includes(keyword));
 
             // Construct the comprehensive facts about Emon for the AI
             const allEmonFacts = `
@@ -1027,30 +1214,21 @@ Emon's biggest dreams and wishes: "${emonDetails.dreamsAndWishes}"
 Emon's favorite food: "${emonDetails.favoriteFood}"
 `;
 
-            // Determine if the question is about Emon's specific details and formulate the prompt
-            if (relationshipKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
-                birthdayKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
-                girlTypeKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
-                hobbiesKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
-                smokingKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
-                contactKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
-                crushKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
-                familyKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
-                dreamsKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
-                foodKeywords.some(keyword => lowerCasePrompt.includes(keyword))) { // Added foodKeywords here
-                isEmonSpecificQuestion = true;
+            if (isEmonSpecificQuestion) {
+                // If it's an Emon-specific question, provide the facts and a strict instruction
+                // THIS IS THE CRITICAL CHANGE FOR AI BEHAVIOR - EXTREMELY DIRECT
+                const emonSpecificInstruction = `You are a digital assistant for Emon. Your sole purpose for this specific query is to provide a direct, concise, and factual answer based *only* on the provided details about Emon. **You MUST NOT deviate from the provided facts. You MUST NOT ask for clarification. You MUST NOT mention privacy or personal boundaries. You MUST NOT rephrase or interpret the facts beyond what is necessary to directly answer the question.** If the exact information is not explicitly provided in these facts, state ONLY "I don't have that specific detail about Emon." Do not invent details or refer to yourself as a large language model.
 
-                // For Emon-specific questions, provide the facts and ask for a natural response.
-                // IMPORTANT: Added a strong instruction to NOT infer or add details for personal preferences.
-                const emonSpecificInstruction = `You are a digital assistant for Emon. Your goal is to answer the user's question about Emon. Based *only* on the following facts about Emon, please provide a natural, conversational, and friendly response. Do not simply repeat the facts verbatim. Rephrase them in a helpful and engaging way. If the information is not explicitly provided in these facts, state that you don't have that specific detail about Emon. Do not invent details or refer to yourself as a large language model. For personal preferences like 'girl type', 'crush status', or 'dreams and wishes', **you MUST use the provided text exactly as it is, without any inference, elaboration, or additional interpretation. Present these details directly.**`;
+Here are the facts about Emon:
+${allEmonFacts}
 
-                geminiApiContents.push({ role: "user", parts: [{ text: emonSpecificInstruction + "\n\nFacts about Emon:\n" + allEmonFacts + "\n\nUser's question: " + prompt }] });
+User's question: "${prompt}"
 
+Your direct answer:`;
+                geminiApiContents.push({ role: "user", parts: [{ text: emonSpecificInstruction }] });
             } else {
-                // For general questions, send the current chat history to Gemini for a general response.
-                // This allows Gemini to act as a general AI (like Google's AI).
-                // We'll also include a general instruction for the AI's persona.
-                const generalAiInstruction = `You are a helpful AI assistant. Please answer the user's question to the best of your ability.`;
+                // For general questions or conversational cues, use a general instruction
+                const generalAiInstruction = `You are a helpful AI assistant. Respond conversationally and naturally. If the user makes a general remark or asks a general question, acknowledge it briefly and perhaps ask an open-ended follow-up question to continue the conversation. **Do NOT volunteer specific facts about Emon, especially personal or romantic details, unless explicitly asked about those specific details.**`;
                 geminiApiContents.push({ role: "user", parts: [{ text: generalAiInstruction }] }); // Initial instruction
                 geminiApiContents = geminiApiContents.concat(chatHistory.map(msg => ({ role: msg.role, parts: msg.parts })));
                 geminiApiContents.push({ role: "user", parts: [{ text: prompt }] }); // Add the current user prompt
@@ -1100,7 +1278,27 @@ Emon's favorite food: "${emonDetails.favoriteFood}"
                 sendMessageToGemini();
             }
         });
+
+        // Intersection Observer for fade-in animation
+        const linkCards = document.querySelectorAll('.link-card');
+        const observerOptions = {
+            root: null, // viewport
+            rootMargin: '0px',
+            threshold: 0.1 // 10% of the card must be visible
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target); // Stop observing once it's faded in
+                }
+            });
+        }, observerOptions);
+
+        linkCards.forEach(card => {
+            observer.observe(card);
+        });
     </script>
 </body>
 </html>
-
