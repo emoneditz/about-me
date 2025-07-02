@@ -569,7 +569,7 @@
     <section id="hero" class="relative z-10 flex flex-col items-center justify-center min-h-screen pt-32 pb-16 px-4 w-full max-w-2xl mx-auto text-white">
         <img src="https://placehold.co/200x200/00c6ff/ffffff?text=Emon's+Avatar" alt="Emon's Sovereign Avatar" class="rounded-full w-48 h-48 mx-auto object-cover mb-8 shadow-lg border-4 border-primary-glow avatar-glow">
         <h1 class="text-5xl md:text-7xl font-extrabold mb-4 leading-tight text-center">
-            I am <span class="gradient-text">Emon</span>
+            Welcome, I am <span class="gradient-text">Emon</span>
         </h1>
         <p class="text-2xl md:text-3xl max-w-2xl mx-auto text-gray-300 text-center font-medium mb-10">
             <span id="typed-text" class="font-bold gradient-text"></span>
@@ -591,9 +591,8 @@
         <div class="glassy p-10 text-center">
             <h2 class="text-4xl font-bold mb-8 gradient-text tracking-wide">About The Architect</h2>
             <p class="text-xl leading-relaxed text-gray-200 dark:text-gray-300 mb-10">
-                Welcome to my domain. This space represents a convergence of my diverse pursuits and the digital extensions of my intellect. I navigate the realms of knowledge, creativity, and strategic engagement, constantly evolving and expanding my capabilities.
+                Hey, it’s me Emon. I like to explore things. I don’t have much to say, but if you want to know anything about me, you can ask my AI right here or DM me on Facebook. Have a great day ♥️
             </p>
-            <!-- Removed Social Media Links from here as requested -->
         </div>
     </section>
 
@@ -670,7 +669,7 @@
     <footer class="relative z-10 py-10 px-4 text-center bg-transparent text-gray-500 transition-colors duration-300 mt-auto">
         <div class="container mx-auto">
             <!-- Copyright to Emon -->
-            <p class="text-lg">&copy; 2025 Emon. All Rights Reserved. Engineered by Intelligence.</p>
+            <p class="text-lg">&copy; 2025 Emon. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -749,7 +748,7 @@
             const typedTextElement = document.getElementById('typed-text');
             if (typedTextElement) {
                 new Typed(typedTextElement, {
-                    strings: ["a student", "a creator", "a gamer", "an explorer of frontiers"],
+                    strings: ["a student", "a creator", "a gamer"], // 'an explorer of frontiers' removed
                     typeSpeed: 60,
                     backSpeed: 30,
                     loop: true,
@@ -915,7 +914,12 @@
             birthday: "Emon's birthday is on the 3rd of any month.",
             girlType: "Emon's ideal partner has an 'empty past' (meaning never been in a relationship or no ex-partners) and knows how to cook. He values good manners and a supportive nature above physical appearance or any other superficial traits.",
             hobbies: "Emon likes to play video games, especially shooting games. His favorite game is Free Fire.", // New info
-            smoking: "Emon is not engaged with any smoking or related things." // New info
+            smoking: "Emon is not engaged with any smoking or related things.", // New info
+            contact: "You can contact Emon by asking his AI here or by direct messaging him on Facebook.", // Added contact detail
+            crushStatus: "Emon does not have any crush online or in real life. In online interactions, he believes people are different offline and online. In offline settings, he always stays away from girls because a heartbreak could ruin his life.", // New crush info
+            brothers: "Emon has two brothers. Rimon is 2.8 years older than him, and Saimon is 6 years younger than him.", // New brothers info
+            dreamsAndWishes: "Emon's biggest dreams and wishes are to see his family's real smile, not the fake one, but the one from the heart; to ensure his family's lasting health and safety; and to be the reason behind his family's true happiness.", // Updated dreams and wishes info
+            favoriteFood: "Emon's favorite food is cow meat Biriyani." // New favorite food info
         };
 
         // Function to add a message to the chat history UI
@@ -932,8 +936,7 @@
             `Hello Mr/Miss, I am a digital assistant created by ${emonDetails.name}. If you want to know anything about him like - hobbies, preferences, or want to chat with me, just ask.`,
             `Greetings. I am a digital assistant, brought into existence by ${emonDetails.name}. Feel free to inquire about his interests, preferences, or engage in conversation.`,
             `You are speaking with a digital assistant, designed by ${emonDetails.name}. I can provide insights into his passions, preferences, or simply chat with you.`,
-            `My core programming was established by ${emonDetails.name}. Should you wish to learn about his hobbies, preferences, or just converse, I am here to assist.`,
-            `I was created by Google to assist Emon and provide information about him.` // More direct answer for "who created you"
+            `My core programming was established by ${emonDetails.name}. Should you wish to learn about his hobbies, preferences, or just converse, I am here to assist.`
         ];
 
         // Function to get a random AI identity response
@@ -978,10 +981,14 @@
             const relationshipKeywords = ["girlfriend", "relationship", "single", "married", "partner", "love life", "gf"];
             const birthdayKeywords = ["birthday", "birth date", "born", "bday"];
             const girlTypeKeywords = ["type in girl", "ideal girl", "girl type", "preferences in girl", "what kind of girl", "dream girl"];
-            const contactKeywords = ["contact", "reach out", "get in touch", "how to contact me", "how can I contact", "contact emon"];
+            const contactKeywords = ["contact", "reach out", "get in touch", "how to contact me", "how can I contact", "contact emon", "dm me"];
             const hobbiesKeywords = ["hobbies", "games", "favorite game", "free fire", "shooting games", "what does he like to do"]; // New keywords
             const smokingKeywords = ["smoking", "smoke", "cigarettes", "vape", "drugs"]; // New keywords
-            const aiIdentityKeywords = ["who are you", "what are you", "your creator", "who made you", "where are you from", "who created you", "your origin", "about you", "google created you"]; // Added "google created you"
+            const crushKeywords = ["crush", "have a crush", "crushes", "love interest"]; // New keywords for crush status
+            const familyKeywords = ["brother", "brothers", "family", "siblings", "rimon", "saimon"]; // New keywords for brothers
+            const dreamsKeywords = ["dream", "dreams", "wish", "wishes", "goals", "aspirations", "future"]; // New keywords for dreams and wishes
+            const foodKeywords = ["food", "favorite food", "eat", "eating", "cow meat", "biriyani", "biryani"]; // New keywords for food
+            const aiIdentityKeywords = ["who are you", "what are you", "your creator", "who made you", "where are you from", "who created you", "your origin", "about you"]; // Removed "google created you"
 
             chatInput.value = '';
             chatSendButton.disabled = true;
@@ -1014,6 +1021,10 @@ Emon's ideal partner has these qualities: "${emonDetails.girlType}"
 Emon's hobbies include: "${emonDetails.hobbies}"
 Regarding smoking: "${emonDetails.smoking}"
 You can contact Emon via: "${emonDetails.contact}"
+Emon's crush status is: "${emonDetails.crushStatus}"
+Emon's brothers: "${emonDetails.brothers}"
+Emon's biggest dreams and wishes: "${emonDetails.dreamsAndWishes}"
+Emon's favorite food: "${emonDetails.favoriteFood}"
 `;
 
             // Determine if the question is about Emon's specific details and formulate the prompt
@@ -1022,7 +1033,11 @@ You can contact Emon via: "${emonDetails.contact}"
                 girlTypeKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
                 hobbiesKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
                 smokingKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
-                contactKeywords.some(keyword => lowerCasePrompt.includes(keyword))) {
+                contactKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
+                crushKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
+                familyKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
+                dreamsKeywords.some(keyword => lowerCasePrompt.includes(keyword)) ||
+                foodKeywords.some(keyword => lowerCasePrompt.includes(keyword))) { // Added foodKeywords here
                 isEmonSpecificQuestion = true;
 
                 // For Emon-specific questions, provide the facts and ask for a natural response.
@@ -1087,3 +1102,4 @@ You can contact Emon via: "${emonDetails.contact}"
     </script>
 </body>
 </html>
+
