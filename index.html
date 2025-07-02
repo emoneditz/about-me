@@ -912,13 +912,13 @@
             roles: "a student, a creator, and a gamer", // Used for Typed.js
             relationshipStatus: "Emon does not currently have a girlfriend, as he is still a student. He finds that relationships often lead to heartbreak. He is loyal to his future Queen and maintains distance from girls for this reason.",
             birthday: "Emon's birthday is on the 3rd of any month.",
-            girlType: "Emon's ideal partner has an 'empty past' (meaning never been in a relationship or no ex-partners) and knows how to cook. He values good manners and a supportive nature above physical appearance or any other superficial traits.",
+            girlType: "Emon's ideal partner needs to be supportive, have no ex-partners (an empty past), and possess cooking skills. He does not care about physical appearance, like flair skin.", // Updated with strict wording
             hobbies: "Emon likes to play video games, especially shooting games. His favorite game is Free Fire.", // New info
             smoking: "Emon is not engaged with any smoking or related things.", // New info
             contact: "You can contact Emon by asking his AI here or by direct messaging him on Facebook.", // Added contact detail
             crushStatus: "Emon does not have any crush online or in real life. In online interactions, he believes people are different offline and online. In offline settings, he always stays away from girls because a heartbreak could ruin his life.", // New crush info
             brothers: "Emon has two brothers. Rimon is 2.8 years older than him, and Saimon is 6 years younger than him.", // New brothers info
-            dreamsAndWishes: "Emon's biggest dreams and wishes are to see his family's real smile, not the fake one, but the one from the heart; to ensure his family's lasting health and safety; and to be the reason behind his family's true happiness.", // Updated dreams and wishes info
+            dreamsAndWishes: "Emon's biggest dreams and wishes are: 1. To see his family’s real smile, not the fake one, but the one from the heart. 2. For his family's lasting health and safety. 3. To be the reason behind his family's true happiness.", // Updated dreams and wishes info
             favoriteFood: "Emon's favorite food is cow meat Biriyani." // New favorite food info
         };
 
@@ -980,7 +980,7 @@
             // Keywords that trigger specific Emon details via Gemini API
             const relationshipKeywords = ["girlfriend", "relationship", "single", "married", "partner", "love life", "gf"];
             const birthdayKeywords = ["birthday", "birth date", "born", "bday"];
-            const girlTypeKeywords = ["type in girl", "ideal girl", "girl type", "preferences in girl", "what kind of girl", "dream girl"];
+            const girlTypeKeywords = ["type in girl", "ideal girl", "girl type", "preferences in girl", "what kind of girl", "dream girl", "flair skin", "fair skin"]; // Added flair/fair skin keywords
             const contactKeywords = ["contact", "reach out", "get in touch", "how to contact me", "how can I contact", "contact emon", "dm me"];
             const hobbiesKeywords = ["hobbies", "games", "favorite game", "free fire", "shooting games", "what does he like to do"]; // New keywords
             const smokingKeywords = ["smoking", "smoke", "cigarettes", "vape", "drugs"]; // New keywords
@@ -1041,7 +1041,8 @@ Emon's favorite food: "${emonDetails.favoriteFood}"
                 isEmonSpecificQuestion = true;
 
                 // For Emon-specific questions, provide the facts and ask for a natural response.
-                const emonSpecificInstruction = `You are a digital assistant for Emon. Your goal is to answer the user's question about Emon. Based *only* on the following facts about Emon, please provide a natural, conversational, and friendly response. Do not simply repeat the facts verbatim. Rephrase them in a helpful and engaging way. If the information is not explicitly provided in these facts, state that you don't have that specific detail about Emon. Do not invent details or refer to yourself as a large language model.`;
+                // IMPORTANT: Added a strong instruction to NOT infer or add details for personal preferences.
+                const emonSpecificInstruction = `You are a digital assistant for Emon. Your goal is to answer the user's question about Emon. Based *only* on the following facts about Emon, please provide a natural, conversational, and friendly response. Do not simply repeat the facts verbatim. Rephrase them in a helpful and engaging way. If the information is not explicitly provided in these facts, state that you don't have that specific detail about Emon. Do not invent details or refer to yourself as a large language model. For personal preferences like 'girl type', 'crush status', or 'dreams and wishes', **you MUST use the provided text exactly as it is, without any inference, elaboration, or additional interpretation. Present these details directly.**`;
 
                 geminiApiContents.push({ role: "user", parts: [{ text: emonSpecificInstruction + "\n\nFacts about Emon:\n" + allEmonFacts + "\n\nUser's question: " + prompt }] });
 
