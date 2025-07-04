@@ -877,7 +877,7 @@
             const typedTextElement = document.getElementById('typed-text');
             if (typedTextElement) {
                 new Typed(typedTextElement, {
-                    strings: ["a student", "a creator", "a gamer"], // 'an explorer of frontiers' removed
+                    strings: ["a student", "a tech explorer", "a human kind"], // Updated strings
                     typeSpeed: 60,
                     backSpeed: 30,
                     loop: true,
@@ -1038,17 +1038,19 @@
         // Emon's details - UPDATED FOR CLARITY AND API USE
         const emonDetails = {
             name: "Emon",
-            roles: "a student, a creator, and a gamer", // Used for Typed.js
+            roles: "a student, a tech explorer, a human kind", // Used for Typed.js
             relationshipStatus: "Emon does not currently have a girlfriend, as he is still a student. He finds that relationships often lead to heartbreak. He is loyal to his future Queen and maintains distance from girls for this reason.",
-            birthday: "Emon's birthday is on the 3rd day of any month.", // Corrected birthday detail
-            girlType: "Emon is looking for a partner who is supportive, has no ex-partners (an empty past), and has cooking skills. He does not care about physical appearance, like flair skin.", // Updated with strict wording for "what he's looking for"
-            hobbies: "Emon likes to play video games, especially shooting games. His favorite game is Free Fire.", // New info
-            smoking: "Emon is not engaged with any smoking or related things.", // New info
-            contact: "You can contact Emon by asking his AI here or by direct messaging him on Facebook.", // Added contact detail
-            crushStatus: "Emon does not have any crush online or in real life. In online interactions, he believes people are different offline and online. In offline settings, he always stays away from girls because a heartbreak could ruin his life.", // New crush info
-            brothers: "Emon has two brothers. Rimon is 2.8 years older than him, and Saimon is 6 years younger than him.", // New brothers info
-            dreamsAndWishes: "Emon's biggest dreams and wishes are: 1. To see his family’s real smile, not the fake one, but the one from the heart. 2. For his family's lasting health and safety. 3. To be the reason behind his family's true happiness.", // Updated dreams and wishes info
-            favoriteFood: "Emon's favorite food is cow meat Biriyani." // New favorite food info
+            birthday: "Emon's birthday is on the 3rd day of any month.",
+            girlType: "Emon is looking for a partner with no ex-partners and cooking skills. He does not care about physical appearance or skin tone.", // Updated based on user's direct answer
+            hobbies: "Emon likes to play video games, especially shooting games. His favorite game is Free Fire. He also enjoys video editing.",
+            smoking: "Emon is not engaged with any smoking or related things.",
+            contact: "You can contact Emon by asking his AI here or by direct messaging him on Facebook.",
+            crushStatus: "Emon does not have any crush online or in real life. In online interactions, he believes people are different offline and online. In offline settings, he always stays away from girls because a heartbreak could ruin his life.",
+            brothers: "Emon has two brothers. Rimon is 2.8 years older than him, and Saimon is 6 years younger than him.",
+            dreamsAndWishes: "Emon's biggest dreams and wishes are: 1. To see his family’s real smile, not the fake one, but the one from the heart. 2. For his family's lasting health and safety. 3. To be the reason behind his family's true happiness.",
+            favoriteFood: "Emon's favorite food is cow meat Biriyani.",
+            origin: "Milky Way Galaxy, Earth, Bangladesh", // New information
+            collabInterest: "Emon is not interested in any collaborations, promotions, or sponsorships." // New information
         };
 
         // Function to add a message to the chat history UI
@@ -1158,12 +1160,14 @@
             "birthday", "birth date", "born", "bday",
             "type in girl", "ideal girl", "girl type", "preferences in girl", "what kind of girl", "dream girl", "flair skin", "fair skin", "looking for in a partner",
             "contact", "reach out", "get in touch", "how to contact me", "how can I contact", "contact emon", "dm me",
-            "hobbies", "games", "favorite game", "free fire", "shooting games", "what does he like to do",
+            "hobbies", "games", "favorite game", "free fire", "shooting games", "what does he like to do", "video editing", // Added "video editing"
             "smoking", "smoke", "cigarettes", "vape", "drugs",
             "crush", "have a crush", "crushes", "love interest", "like anyone", "liked anyone",
             "brother", "brothers", "family", "siblings", "rimon", "saimon",
             "dream", "dreams", "wish", "wishes", "goals", "aspirations", "future",
-            "food", "favorite food", "eat", "eating", "cow meat", "biriyani", "biryani"
+            "food", "favorite food", "eat", "eating", "cow meat", "biriyani", "biryani",
+            "origin", "where are you from", "where is emon from", "galaxy", "earth", "bangladesh", // Added origin keywords
+            "collab", "collaboration", "promote", "promotion", "sponsor", "sponsorship", "business", "work with" // Added collab keywords
         ];
 
         // Send Message to Gemini API
@@ -1212,6 +1216,8 @@ Emon's crush status is: "${emonDetails.crushStatus}"
 Emon's brothers: "${emonDetails.brothers}"
 Emon's biggest dreams and wishes: "${emonDetails.dreamsAndWishes}"
 Emon's favorite food: "${emonDetails.favoriteFood}"
+Emon's origin is: "${emonDetails.origin}"
+Emon's interest in collaborations/promotions/sponsorships: "${emonDetails.collabInterest}"
 `;
 
             if (isEmonSpecificQuestion) {
