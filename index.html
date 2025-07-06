@@ -1,14 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth dark"> <!-- Default to dark mode -->
-<head>
+<html lang="en" class="scroll-smooth dark"> <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emon Lab</title> <!-- Title set to Emon Lab -->
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter -->
+    <title>Emon Lab</title> <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Custom CSS variables for dark/light mode */
@@ -620,22 +615,16 @@
         }
     </style>
 </head>
-<body class="relative dark-mode-rgb"> <!-- Default to dark-mode-rgb -->
-
-    <!-- Preloader -->
-    <div id="preloader">
+<body class="relative dark-mode-rgb"> <div id="preloader">
         <div class="spinner-container">
             <div class="spinner"></div>
             <div class="spinner"></div>
         </div>
     </div>
 
-    <!-- Header -->
     <header id="main-header" class="fixed top-0 left-0 w-full z-50 py-6 px-8 md:px-16 header-glassy shadow-lg">
         <nav class="container mx-auto flex justify-between items-center">
-            <div class="text-3xl font-extrabold gradient-text tracking-wider">Emon Lab</div> <!-- Header text to Emon Lab -->
-            <div class="flex items-center space-x-6">
-                <!-- Dark/Light Mode Toggle -->
+            <div class="text-3xl font-extrabold gradient-text tracking-wider">Emon Lab</div> <div class="flex items-center space-x-6">
                 <button id="theme-toggle" class="p-3 rounded-full bg-gray-900 bg-opacity-30 text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-glow transition-colors duration-300">
                     <i class="fas fa-moon hidden dark:block text-2xl"></i>
                     <i class="fas fa-sun block dark:hidden text-2xl"></i>
@@ -644,10 +633,8 @@
         </nav>
     </header>
 
-    <!-- Particles.js background -->
     <div id="particles-js"></div>
 
-    <!-- Hero Section (for avatar and intro) -->
     <section id="hero" class="relative z-10 flex flex-col items-center justify-center min-h-screen pt-32 pb-16 px-4 w-full max-w-2xl mx-auto text-white">
         <img src="https://raw.githubusercontent.com/emoneditz/about-me/main/images%20(1)%20(1).jpeg" alt="Emon's Sovereign Avatar" class="rounded-full w-48 h-48 mx-auto object-cover mb-8 shadow-lg border-4 border-primary-glow avatar-glow">
         <h1 class="text-5xl md:text-7xl font-extrabold mb-4 leading-tight text-center">
@@ -657,18 +644,15 @@
             <span id="typed-text" class="font-bold gradient-text"></span>
         </p>
         <div class="flex flex-col sm:flex-row gap-4 items-center">
-            <!-- "Ask me about Emon" button with robot icon -->
             <button id="ask-emon-button" class="inline-flex items-center justify-center px-8 py-4 rounded-full gradient-button text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out text-xl tracking-wide">
                 <i class="fas fa-robot mr-3"></i> Ask me about Emon
             </button>
-            <!-- New "All my links" button -->
             <button id="all-links-button" class="inline-flex items-center justify-center px-8 py-4 rounded-full gradient-button text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out text-xl tracking-wide">
                 All my links <i class="fas fa-link ml-3"></i>
             </button>
         </div>
     </section>
 
-    <!-- About Section -->
     <section id="about" class="relative z-10 py-20 px-4 w-full max-w-4xl mx-auto">
         <div class="glassy p-10 text-center">
             <h2 class="text-4xl font-bold mb-8 gradient-text tracking-wide">About The Architect</h2>
@@ -678,11 +662,8 @@
         </div>
     </section>
 
-    <!-- Links Section (Main Content) - Now "Connect with Emon" -->
     <section id="links" class="relative z-10 py-20 px-4 w-full max-w-3xl mx-auto">
-        <h2 class="text-4xl font-bold text-center mb-12 gradient-text tracking-wide">Connect with Emon</h2> <!-- Title here is "Connect with Emon" -->
-        <div class="grid grid-cols-1 gap-8">
-            <!-- Customizable Link Card 1: Instagram -->
+        <h2 class="text-4xl font-bold text-center mb-12 gradient-text tracking-wide">Connect with Emon</h2> <div class="grid grid-cols-1 gap-8">
             <div class="link-card glassy">
                 <div class="link-card-content">
                     <i class="fab fa-instagram social-icon-in-card text-pink-500"></i>
@@ -691,12 +672,10 @@
                 </div>
                 <div class="link-card-button-container">
                     <a href="https://www.instagram.com/emon_editz69?igsh=dXY3em5ndjFrczd5" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
-                        Visit Profile <i class="fab fa-instagram ml-2"></i> <!-- Changed icon -->
-                    </a>
+                        Visit Profile <i class="fab fa-instagram ml-2"></i> </a>
                 </div>
             </div>
 
-            <!-- Customizable Link Card 2: X (Twitter) -->
             <div class="link-card glassy">
                 <div class="link-card-content">
                     <i class="fab fa-twitter social-icon-in-card text-blue-400"></i>
@@ -705,12 +684,10 @@
                 </div>
                 <div class="link-card-button-container">
                     <a href="https://x.com/emon3xprime" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
-                        Visit Profile <i class="fab fa-twitter ml-2"></i> <!-- Changed icon -->
-                    </a>
+                        Visit Profile <i class="fab fa-twitter ml-2"></i> </a>
                 </div>
             </div>
 
-            <!-- New Customizable Link Card: Pinterest (Moved up) -->
             <div class="link-card glassy">
                 <div class="link-card-content">
                     <i class="fab fa-pinterest social-icon-in-card text-red-700"></i>
@@ -719,12 +696,10 @@
                 </div>
                 <div class="link-card-button-container">
                     <a href="https://pin.it/7bdXGMclR" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
-                        Visit Profile <i class="fab fa-pinterest ml-2"></i> <!-- Changed icon -->
-                    </a>
+                        Visit Profile <i class="fab fa-pinterest ml-2"></i> </a>
                 </div>
             </div>
 
-            <!-- Customizable Link Card 3: YouTube (Moved down) -->
             <div class="link-card glassy">
                 <div class="link-card-content">
                     <i class="fab fa-youtube social-icon-in-card text-red-600"></i>
@@ -732,13 +707,12 @@
                     <p>My multimedia creations and explorations.</p>
                 </div>
                 <div class="link-card-button-container">
-                    <button id="youtube-link-button" class="link-card-button">
+                    <a href="https://www.youtube.com/channel/UCoXKXS2lE-vCTriH0ZSz1mA" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
                         Visit Channel <i class="fab fa-youtube ml-2"></i>
-                    </button>
+                    </a>
                 </div>
             </div>
 
-            <!-- Customizable Link Card 4: Facebook -->
             <div class="link-card glassy">
                 <div class="link-card-content">
                     <i class="fab fa-facebook social-icon-in-card text-blue-600"></i>
@@ -747,12 +721,10 @@
                 </div>
                 <div class="link-card-button-container">
                     <a href="https://www.facebook.com/emoneditz69" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
-                        Visit Profile <i class="fab fa-facebook ml-2"></i> <!-- Changed icon -->
-                    </a>
+                        Visit Profile <i class="fab fa-facebook ml-2"></i> </a>
                 </div>
             </div>
 
-            <!-- Customizable Link Card 5: Discord -->
             <div class="link-card glassy">
                 <div class="link-card-content">
                     <i class="fab fa-discord social-icon-in-card text-indigo-500"></i>
@@ -761,12 +733,10 @@
                 </div>
                 <div class="link-card-button-container">
                     <a href="https://discordapp.com/users/_emon_" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
-                        Visit Profile <i class="fab fa-discord ml-2"></i> <!-- Changed icon -->
-                    </a>
+                        Visit Profile <i class="fab fa-discord ml-2"></i> </a>
                 </div>
             </div>
 
-            <!-- Customizable Link Card 7: Email -->
             <div class="link-card glassy">
                 <div class="link-card-content">
                     <i class="fas fa-envelope social-icon-in-card text-gray-400"></i>
@@ -780,20 +750,15 @@
                 </div>
             </div>
 
-            <!-- Add more customizable link cards here as needed -->
-
-        </div>
+            </div>
     </section>
 
-    <!-- Footer -->
     <footer class="relative z-10 py-10 px-4 text-center bg-transparent text-gray-500 transition-colors duration-300 mt-auto">
         <div class="container mx-auto">
-            <!-- Copyright to Emon -->
             <p class="text-lg">&copy; 2025 Emon. All Rights Reserved.</p>
         </div>
     </footer>
 
-    <!-- Gemini Assistant Modal -->
     <div id="gemini-modal-overlay" class="modal-overlay">
         <div class="gemini-modal">
             <div class="modal-header">
@@ -801,8 +766,7 @@
                 <button id="modal-close-button" class="modal-close-button">&times;</button>
             </div>
             <div id="chat-history" class="chat-history">
-                <!-- Chat messages will be appended here -->
-            </div>
+                </div>
             <div class="chat-input-area">
                 <input type="text" id="chat-input" class="chat-input" placeholder="How may I assist you, Sovereign?">
                 <button id="chat-send-button" class="chat-send-button">
@@ -812,7 +776,6 @@
         </div>
     </div>
 
-    <!-- Custom Alert Modal for "Link Not Added" -->
     <div id="custom-alert-modal-overlay" class="custom-alert-modal-overlay">
         <div class="custom-alert-modal">
             <h3>Link Not Added!</h3>
@@ -821,9 +784,7 @@
         </div>
     </div>
 
-    <!-- Typed.js CDN -->
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
-    <!-- Particles.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
     <script>
@@ -1140,9 +1101,9 @@
 
                 setTimeout(() => {
                     if (clickedButton) { // Only proceed if a button was clicked
-                        if (clickedButton.id === 'youtube-link-button') {
-                            showCustomAlert();
-                        } else if (clickedButton.classList.contains('external-link-button')) {
+                        // The YouTube link is now a direct <a> tag, so the alert for it is no longer needed here.
+                        // You can remove the 'showCustomAlert()' call for 'youtube-link-button' if it was here.
+                        if (clickedButton.classList.contains('external-link-button')) {
                             const href = clickedButton.getAttribute('href');
                             if (href) {
                                 window.open(href, '_blank');
