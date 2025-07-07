@@ -1,9 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth dark"> <head>
+<html lang="en" class="scroll-smooth dark"> <!-- Default to dark mode -->
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emon Lab</title> <script src="https://cdn.tailwindcss.com"></script>
+    <title>Emon Lab</title> <!-- Title set to Emon Lab -->
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Custom CSS variables for dark/light mode */
@@ -613,18 +618,95 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(var(--primary-glow-rgb), 0.4);
         }
+
+        /* Password Modal Specific Styles */
+        .password-modal {
+            background-color: var(--modal-bg-dark);
+            border: 1px solid var(--border-color-dark);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            width: 90%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.active .password-modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            background-color: rgba(26, 32, 44, 0.1);
+            border: 1px solid var(--border-color-dark);
+            color: var(--text-color-dark);
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        .password-input:focus {
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 0 2px rgba(var(--primary-glow-rgb), 0.3);
+        }
+        .password-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .password-submit-button {
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            background-image: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+            font-size: 1.2rem;
+        }
+        .password-submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(var(--primary-glow-rgb), 0.4);
+        }
+        .password-error {
+            color: #ff4d4d; /* Bright red for error */
+            font-size: 0.95rem;
+            margin-top: -0.5rem;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .password-error.active {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
-<body class="relative dark-mode-rgb"> <div id="preloader">
+<body class="relative dark-mode-rgb">
+
+    <!-- Preloader -->
+    <div id="preloader">
         <div class="spinner-container">
             <div class="spinner"></div>
             <div class="spinner"></div>
         </div>
     </div>
 
+    <!-- Header -->
     <header id="main-header" class="fixed top-0 left-0 w-full z-50 py-6 px-8 md:px-16 header-glassy shadow-lg">
         <nav class="container mx-auto flex justify-between items-center">
-            <div class="text-3xl font-extrabold gradient-text tracking-wider">Emon Lab</div> <div class="flex items-center space-x-6">
+            <div class="text-3xl font-extrabold gradient-text tracking-wider">Emon Lab</div>
+            <div class="flex items-center space-x-6">
+                <!-- Dark/Light Mode Toggle -->
                 <button id="theme-toggle" class="p-3 rounded-full bg-gray-900 bg-opacity-30 text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-glow transition-colors duration-300">
                     <i class="fas fa-moon hidden dark:block text-2xl"></i>
                     <i class="fas fa-sun block dark:hidden text-2xl"></i>
@@ -633,8 +715,10 @@
         </nav>
     </header>
 
+    <!-- Particles.js background -->
     <div id="particles-js"></div>
 
+    <!-- Hero Section (for avatar and intro) -->
     <section id="hero" class="relative z-10 flex flex-col items-center justify-center min-h-screen pt-32 pb-16 px-4 w-full max-w-2xl mx-auto text-white">
         <img src="https://raw.githubusercontent.com/emoneditz/about-me/main/images%20(1)%20(1).jpeg" alt="Emon's Sovereign Avatar" class="rounded-full w-48 h-48 mx-auto object-cover mb-8 shadow-lg border-4 border-primary-glow avatar-glow">
         <h1 class="text-5xl md:text-7xl font-extrabold mb-4 leading-tight text-center">
@@ -644,15 +728,18 @@
             <span id="typed-text" class="font-bold gradient-text"></span>
         </p>
         <div class="flex flex-col sm:flex-row gap-4 items-center">
+            <!-- "Ask me about Emon" button with robot icon -->
             <button id="ask-emon-button" class="inline-flex items-center justify-center px-8 py-4 rounded-full gradient-button text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out text-xl tracking-wide">
                 <i class="fas fa-robot mr-3"></i> Ask me about Emon
             </button>
+            <!-- New "All my links" button -->
             <button id="all-links-button" class="inline-flex items-center justify-center px-8 py-4 rounded-full gradient-button text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out text-xl tracking-wide">
                 All my links <i class="fas fa-link ml-3"></i>
             </button>
         </div>
     </section>
 
+    <!-- About Section -->
     <section id="about" class="relative z-10 py-20 px-4 w-full max-w-4xl mx-auto">
         <div class="glassy p-10 text-center">
             <h2 class="text-4xl font-bold mb-8 gradient-text tracking-wide">About The Architect</h2>
@@ -662,8 +749,11 @@
         </div>
     </section>
 
+    <!-- Links Section (Main Content) - Now "Connect with Emon" -->
     <section id="links" class="relative z-10 py-20 px-4 w-full max-w-3xl mx-auto">
-        <h2 class="text-4xl font-bold text-center mb-12 gradient-text tracking-wide">Connect with Emon</h2> <div class="grid grid-cols-1 gap-8">
+        <h2 class="text-4xl font-bold text-center mb-12 gradient-text tracking-wide">Connect with Emon</h2>
+        <div class="grid grid-cols-1 gap-8">
+            <!-- Customizable Link Card 1: Instagram -->
             <div class="link-card glassy">
                 <div class="link-card-content">
                     <i class="fab fa-instagram social-icon-in-card text-pink-500"></i>
@@ -672,10 +762,12 @@
                 </div>
                 <div class="link-card-button-container">
                     <a href="https://www.instagram.com/emon_editz69?igsh=dXY3em5ndjFrczd5" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
-                        Visit Profile <i class="fab fa-instagram ml-2"></i> </a>
+                        Visit Profile <i class="fab fa-instagram ml-2"></i>
+                    </a>
                 </div>
             </div>
 
+            <!-- Customizable Link Card 2: X (Twitter) -->
             <div class="link-card glassy">
                 <div class="link-card-content">
                     <i class="fab fa-twitter social-icon-in-card text-blue-400"></i>
@@ -684,10 +776,12 @@
                 </div>
                 <div class="link-card-button-container">
                     <a href="https://x.com/emon3xprime" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
-                        Visit Profile <i class="fab fa-twitter ml-2"></i> </a>
+                        Visit Profile <i class="fab fa-twitter ml-2"></i>
+                    </a>
                 </div>
             </div>
 
+            <!-- New Customizable Link Card: Pinterest -->
             <div class="link-card glassy">
                 <div class="link-card-content">
                     <i class="fab fa-pinterest social-icon-in-card text-red-700"></i>
@@ -696,10 +790,12 @@
                 </div>
                 <div class="link-card-button-container">
                     <a href="https://pin.it/7bdXGMclR" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
-                        Visit Profile <i class="fab fa-pinterest ml-2"></i> </a>
+                        Visit Profile <i class="fab fa-pinterest ml-2"></i>
+                    </a>
                 </div>
             </div>
 
+            <!-- Customizable Link Card for YouTube (REVERTED TO POP-UP) -->
             <div class="link-card glassy">
                 <div class="link-card-content">
                     <i class="fab fa-youtube social-icon-in-card text-red-600"></i>
@@ -707,12 +803,13 @@
                     <p>My multimedia creations and explorations.</p>
                 </div>
                 <div class="link-card-button-container">
-                    <a href="https://www.youtube.com/channel/UCoXKXS2lE-vCTriH0ZSz1mA" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
+                    <button id="youtube-link-button" class="link-card-button">
                         Visit Channel <i class="fab fa-youtube ml-2"></i>
-                    </a>
+                    </button>
                 </div>
             </div>
 
+            <!-- Customizable Link Card 4: Facebook -->
             <div class="link-card glassy">
                 <div class="link-card-content">
                     <i class="fab fa-facebook social-icon-in-card text-blue-600"></i>
@@ -721,10 +818,12 @@
                 </div>
                 <div class="link-card-button-container">
                     <a href="https://www.facebook.com/emoneditz69" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
-                        Visit Profile <i class="fab fa-facebook ml-2"></i> </a>
+                        Visit Profile <i class="fab fa-facebook ml-2"></i>
+                    </a>
                 </div>
             </div>
 
+            <!-- Customizable Link Card 5: Discord -->
             <div class="link-card glassy">
                 <div class="link-card-content">
                     <i class="fab fa-discord social-icon-in-card text-indigo-500"></i>
@@ -733,10 +832,12 @@
                 </div>
                 <div class="link-card-button-container">
                     <a href="https://discordapp.com/users/_emon_" target="_blank" rel="noopener noreferrer" class="link-card-button external-link-button">
-                        Visit Profile <i class="fab fa-discord ml-2"></i> </a>
+                        Visit Profile <i class="fab fa-discord ml-2"></i>
+                    </a>
                 </div>
             </div>
 
+            <!-- Customizable Link Card 7: Email -->
             <div class="link-card glassy">
                 <div class="link-card-content">
                     <i class="fas fa-envelope social-icon-in-card text-gray-400"></i>
@@ -750,23 +851,40 @@
                 </div>
             </div>
 
+            <!-- NEW: Diary Link Card -->
+            <div class="link-card glassy" id="diary-card">
+                <div class="link-card-content">
+                    <i class="fas fa-book-open social-icon-in-card text-yellow-500"></i>
+                    <h3>Emon's Private Diary</h3>
+                    <p>A glimpse into my thoughts and reflections.</p>
+                </div>
+                <div class="link-card-button-container">
+                    <button id="open-diary-button" class="link-card-button">
+                        Open Diary <i class="fas fa-lock ml-2"></i>
+                    </button>
+                </div>
             </div>
+
+        </div>
     </section>
 
+    <!-- Footer -->
     <footer class="relative z-10 py-10 px-4 text-center bg-transparent text-gray-500 transition-colors duration-300 mt-auto">
         <div class="container mx-auto">
-            <p class="text-lg">&copy; 2025 Emon. All Rights Reserved.</p>
+            <p class="text-lg">© 2025 Emon. All Rights Reserved.</p>
         </div>
     </footer>
 
+    <!-- Gemini Assistant Modal -->
     <div id="gemini-modal-overlay" class="modal-overlay">
         <div class="gemini-modal">
             <div class="modal-header">
                 <span><i class="fas fa-robot mr-2"></i> Your Digital Assistant</span>
-                <button id="modal-close-button" class="modal-close-button">&times;</button>
+                <button id="modal-close-button" class="modal-close-button">×</button>
             </div>
             <div id="chat-history" class="chat-history">
-                </div>
+                <!-- Chat messages will be appended here -->
+            </div>
             <div class="chat-input-area">
                 <input type="text" id="chat-input" class="chat-input" placeholder="How may I assist you, Sovereign?">
                 <button id="chat-send-button" class="chat-send-button">
@@ -776,6 +894,7 @@
         </div>
     </div>
 
+    <!-- Custom Alert Modal for "Link Not Added" (Re-enabled for YouTube) -->
     <div id="custom-alert-modal-overlay" class="custom-alert-modal-overlay">
         <div class="custom-alert-modal">
             <h3>Link Not Added!</h3>
@@ -784,7 +903,25 @@
         </div>
     </div>
 
+    <!-- NEW: Diary Password Modal -->
+    <div id="diary-password-modal-overlay" class="modal-overlay">
+        <div class="password-modal">
+            <div class="modal-header">
+                <span><i class="fas fa-lock mr-2"></i> Private Diary</span>
+                <button id="password-modal-close-button" class="modal-close-button">×</button>
+            </div>
+            <p class="text-gray-300">Enter the password to access Emon's private diary:</p>
+            <input type="password" id="diary-password-input" class="password-input" placeholder="Enter password">
+            <p id="password-error-message" class="password-error">Incorrect password. Please try again.</p>
+            <button id="password-submit-button" class="password-submit-button">
+                Unlock <i class="fas fa-unlock ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Typed.js CDN -->
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <!-- Particles.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
     <script>
@@ -838,7 +975,7 @@
             const typedTextElement = document.getElementById('typed-text');
             if (typedTextElement) {
                 new Typed(typedTextElement, {
-                    strings: ["a student", "a tech explorer", "a human kind"], // Updated strings
+                    strings: ["a student", "a tech explorer", "a human kind"],
                     typeSpeed: 60,
                     backSpeed: 30,
                     loop: true,
@@ -999,10 +1136,10 @@
         // Emon's details - UPDATED FOR CLARITY AND API USE
         const emonDetails = {
             name: "Emon",
-            roles: "a student, a tech explorer, a human kind", // Used for Typed.js
+            roles: "a student, a tech explorer, a human kind",
             relationshipStatus: "Emon does not currently have a girlfriend, as he is still a student. He finds that relationships often lead to heartbreak. He is loyal to his future Queen and maintains distance from girls for this reason.",
             birthday: "Emon's birthday is on the 3rd day of any month.",
-            girlType: "Emon is looking for a partner with no ex-partners and cooking skills. He does not care about physical appearance or skin tone.", // Updated based on user's direct answer
+            girlType: "Emon is looking for a partner with no ex-partners and cooking skills. He does not care about physical appearance or skin tone.",
             hobbies: "Emon likes to play video games, especially shooting games. His favorite game is Free Fire. He also enjoys video editing.",
             smoking: "Emon is not engaged with any smoking or related things.",
             contact: "You can contact Emon by asking his AI here or by direct messaging him on Facebook.",
@@ -1010,8 +1147,8 @@
             brothers: "Emon has two brothers. Rimon is 2.8 years older than him, and Saimon is 6 years younger than him.",
             dreamsAndWishes: "Emon's biggest dreams and wishes are: 1. To see his family’s real smile, not the fake one, but the one from the heart. 2. For his family's lasting health and safety. 3. To be the reason behind his family's true happiness.",
             favoriteFood: "Emon's favorite food is cow meat Biriyani.",
-            origin: "Milky Way Galaxy, Earth, Bangladesh", // New information
-            collabInterest: "Emon is not interested in any collaborations, promotions, or sponsorships." // New information
+            origin: "Milky Way Galaxy, Earth, Bangladesh",
+            collabInterest: "Emon is not interested in any collaborations, promotions, or sponsorships."
         };
 
         // Function to add a message to the chat history UI
@@ -1023,7 +1160,7 @@
             chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
         }
 
-        // Define the dynamic identity responses for the AI itself (no roles here, no "large language model")
+        // Define the dynamic identity responses for the AI itself
         const aiIdentityResponses = [
             `Hello Mr/Miss, I am a digital assistant created by ${emonDetails.name}. If you want to know anything about him like - hobbies, preferences, or want to chat with me, just ask.`,
             `Greetings. I am a digital assistant, brought into existence by ${emonDetails.name}. Feel free to inquire about his interests, preferences, or engage in conversation.`,
@@ -1056,7 +1193,7 @@
             document.getElementById('links').scrollIntoView({ behavior: 'smooth' });
         });
 
-        // Close Modal
+        // Close Gemini Modal
         modalCloseButton.addEventListener('click', () => {
             geminiModalOverlay.classList.remove('active');
         });
@@ -1084,30 +1221,31 @@
             );
         }
 
-        // Universal Link Card Click Handler for scrolling and opening links/alerts
+        // UNIVERSAL Link Card Click Handler for scrolling and opening links/alerts/modals
         document.querySelectorAll('.link-card').forEach(card => {
             card.addEventListener('click', (event) => {
-                // Check if the click originated from a button within the card
                 const clickedButton = event.target.closest('.link-card-button');
+
+                if (!clickedButton) return; // Only proceed if a button was clicked
 
                 // Only scroll if the card is NOT fully in viewport
                 if (!isElementFullyInViewport(card)) {
                     card.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
 
-                // Handle opening link or showing alert after a short delay if scrolling occurred,
-                // otherwise, immediately if no scroll was needed.
-                const actionDelay = isElementFullyInViewport(card) ? 0 : 400; // No delay if already in view
+                // Handle actions after a short delay if scrolling occurred, otherwise, immediately.
+                const actionDelay = isElementFullyInViewport(card) ? 0 : 400;
 
                 setTimeout(() => {
-                    if (clickedButton) { // Only proceed if a button was clicked
-                        // The YouTube link is now a direct <a> tag, so the alert for it is no longer needed here.
-                        // You can remove the 'showCustomAlert()' call for 'youtube-link-button' if it was here.
-                        if (clickedButton.classList.contains('external-link-button')) {
-                            const href = clickedButton.getAttribute('href');
-                            if (href) {
-                                window.open(href, '_blank');
-                            }
+                    if (clickedButton.id === 'open-diary-button') {
+                        showDiaryPasswordModal();
+                    } else if (clickedButton.id === 'youtube-link-button') { // Re-added YouTube pop-up logic
+                        showCustomAlert();
+                    }
+                    else if (clickedButton.classList.contains('external-link-button')) {
+                        const href = clickedButton.getAttribute('href');
+                        if (href) {
+                            window.open(href, '_blank');
                         }
                     }
                 }, actionDelay);
@@ -1121,14 +1259,14 @@
             "birthday", "birth date", "born", "bday",
             "type in girl", "ideal girl", "girl type", "preferences in girl", "what kind of girl", "dream girl", "flair skin", "fair skin", "looking for in a partner",
             "contact", "reach out", "get in touch", "how to contact me", "how can I contact", "contact emon", "dm me",
-            "hobbies", "games", "favorite game", "free fire", "shooting games", "what does he like to do", "video editing", // Added "video editing"
+            "hobbies", "games", "favorite game", "free fire", "shooting games", "what does he like to do", "video editing",
             "smoking", "smoke", "cigarettes", "vape", "drugs",
             "crush", "have a crush", "crushes", "love interest", "like anyone", "liked anyone",
             "brother", "brothers", "family", "siblings", "rimon", "saimon",
             "dream", "dreams", "wish", "wishes", "goals", "aspirations", "future",
             "food", "favorite food", "eat", "eating", "cow meat", "biriyani", "biryani",
-            "origin", "where are you from", "where is emon from", "galaxy", "earth", "bangladesh", // Added origin keywords
-            "collab", "collaboration", "promote", "promotion", "sponsor", "sponsorship", "business", "work with" // Added collab keywords
+            "origin", "where are you from", "where is emon from", "galaxy", "earth", "bangladesh",
+            "collab", "collaboration", "promote", "promotion", "sponsor", "sponsorship", "business", "work with"
         ];
 
         // Send Message to Gemini API
@@ -1183,7 +1321,6 @@ Emon's interest in collaborations/promotions/sponsorships: "${emonDetails.collab
 
             if (isEmonSpecificQuestion) {
                 // If it's an Emon-specific question, provide the facts and a strict instruction
-                // THIS IS THE CRITICAL CHANGE FOR AI BEHAVIOR - EXTREMELY DIRECT
                 const emonSpecificInstruction = `You are a digital assistant for Emon. Your sole purpose for this specific query is to provide a direct, concise, and factual answer based *only* on the provided details about Emon. **You MUST NOT deviate from the provided facts. You MUST NOT ask for clarification. You MUST NOT mention privacy or personal boundaries. You MUST NOT rephrase or interpret the facts beyond what is necessary to directly answer the question.** If the exact information is not explicitly provided in these facts, state ONLY "I don't have that specific detail about Emon." Do not invent details or refer to yourself as a large language model.
 
 Here are the facts about Emon:
@@ -1196,13 +1333,13 @@ Your direct answer:`;
             } else {
                 // For general questions or conversational cues, use a general instruction
                 const generalAiInstruction = `You are a helpful AI assistant. Respond conversationally and naturally. If the user makes a general remark or asks a general question, acknowledge it briefly and perhaps ask an open-ended follow-up question to continue the conversation. **Do NOT volunteer specific facts about Emon, especially personal or romantic details, unless explicitly asked about those specific details.**`;
-                geminiApiContents.push({ role: "user", parts: [{ text: generalAiInstruction }] }); // Initial instruction
+                geminiApiContents.push({ role: "user", parts: [{ text: generalAiInstruction }] });
                 geminiApiContents = geminiApiContents.concat(chatHistory.map(msg => ({ role: msg.role, parts: msg.parts })));
-                geminiApiContents.push({ role: "user", parts: [{ text: prompt }] }); // Add the current user prompt
+                geminiApiContents.push({ role: "user", parts: [{ text: prompt }] });
             }
 
             try {
-                const apiKey = "AIzaSyAyKPocbERL1XmrzTkR73306yAwpIPdxPY"; // Your provided API key
+                const apiKey = "YOUR_GEMINI_API_KEY"; // REPLACE WITH YOUR ACTUAL GEMINI API KEY
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 const response = await fetch(apiUrl, {
@@ -1225,7 +1362,7 @@ Your direct answer:`;
 
                 loadingIndicator.remove();
                 addMessageToChat(aiResponse, 'ai');
-                chatHistory.push({ role: "model", parts: [{ text: aiResponse }] }); // Add AI's response to history
+                chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
                 chatSendButton.disabled = false;
                 chatInput.focus();
 
@@ -1265,6 +1402,47 @@ Your direct answer:`;
 
         linkCards.forEach(card => {
             observer.observe(card);
+        });
+
+        /* Diary Password Modal Functionality */
+        const diaryPasswordModalOverlay = document.getElementById('diary-password-modal-overlay');
+        const passwordModalCloseButton = document.getElementById('password-modal-close-button');
+        const diaryPasswordInput = document.getElementById('diary-password-input');
+        const passwordSubmitButton = document.getElementById('password-submit-button');
+        const passwordErrorMessage = document.getElementById('password-error-message');
+
+        const correctPassword = "07 6 2025 EMON!!!!"; // Your exact password
+
+        function showDiaryPasswordModal() {
+            diaryPasswordModalOverlay.classList.add('active');
+            diaryPasswordInput.value = correctPassword; // Auto-input the password
+            passwordErrorMessage.classList.remove('active'); // Hide error message
+            diaryPasswordInput.focus(); // Focus on the input field
+        }
+
+        function hideDiaryPasswordModal() {
+            diaryPasswordModalOverlay.classList.remove('active');
+            diaryPasswordInput.value = ''; // Clear input on close
+            passwordErrorMessage.classList.remove('active'); // Hide error
+        }
+
+        passwordModalCloseButton.addEventListener('click', hideDiaryPasswordModal);
+
+        passwordSubmitButton.addEventListener('click', () => {
+            if (diaryPasswordInput.value === correctPassword) {
+                hideDiaryPasswordModal();
+                window.open('https://emoneditz.github.io/the-password/', '_blank'); // Open diary page in new tab
+            } else {
+                passwordErrorMessage.classList.add('active'); // Show error message
+                diaryPasswordInput.value = ''; // Clear input for retry
+                diaryPasswordInput.focus();
+            }
+        });
+
+        diaryPasswordInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                passwordSubmitButton.click(); // Trigger button click on Enter
+            }
         });
     </script>
 </body>
