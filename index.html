@@ -219,6 +219,7 @@
             opacity: 0; /* Initially hidden for fade-in effect */
             transform: translateY(20px); /* Initially slightly below for fade-in effect */
             transition: opacity 1.2s ease-out, transform 1.2s ease-out; /* Smoother transition */
+            cursor: pointer; /* Indicate it's clickable */
         }
 
         .link-card.fade-in {
@@ -1213,42 +1214,54 @@
         // Function to check if an element is fully in viewport
         function isElementFullyInViewport(el) {
             const rect = el.getBoundingClientRect();
-            return (
+            const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+            const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+
+            const isFullyVisible = (
                 rect.top >= 0 &&
                 rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                rect.bottom <= viewportHeight &&
+                rect.right <= viewportWidth
             );
+            return isFullyVisible;
+        }
+
+        // Function to handle the action after potential scrolling
+        function handleCardAction(event, card) {
+            const clickedButton = event.target.closest('.link-card-button');
+
+            if (clickedButton) {
+                console.log(`[Link Card Action] Button clicked: ${clickedButton.id || clickedButton.textContent.trim()}`);
+                if (clickedButton.id === 'open-diary-button') {
+                    showDiaryPasswordModal();
+                } else if (clickedButton.id === 'youtube-link-button') {
+                    showCustomAlert();
+                } else if (clickedButton.classList.contains('external-link-button')) {
+                    const href = clickedButton.getAttribute('href');
+                    if (href) {
+                        console.log(`[Link Card Action] Opening external link: ${href}`);
+                        window.open(href, '_blank');
+                    }
+                }
+            } else {
+                console.log("[Link Card Action] Clicked on card but not on a specific button. No specific action.");
+            }
         }
 
         // UNIVERSAL Link Card Click Handler for scrolling and opening links/alerts/modals
         document.querySelectorAll('.link-card').forEach(card => {
             card.addEventListener('click', (event) => {
-                const clickedButton = event.target.closest('.link-card-button');
+                const shouldScroll = !isElementFullyInViewport(card);
 
-                if (!clickedButton) return; // Only proceed if a button was clicked
-
-                // Only scroll if the card is NOT fully in viewport
-                if (!isElementFullyInViewport(card)) {
+                if (shouldScroll) {
+                    console.log(`[Link Card Click] Card "${card.querySelector('h3')?.textContent || 'Unknown'}" not fully in view. Scrolling...`);
                     card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Add a small delay to allow scroll to complete before potential link opening
+                    setTimeout(() => handleCardAction(event, card), 400);
+                } else {
+                    console.log(`[Link Card Click] Card "${card.querySelector('h3')?.textContent || 'Unknown'}" already in view. No scrolling needed.`);
+                    handleCardAction(event, card);
                 }
-
-                // Handle actions after a short delay if scrolling occurred, otherwise, immediately.
-                const actionDelay = isElementFullyInViewport(card) ? 0 : 400;
-
-                setTimeout(() => {
-                    if (clickedButton.id === 'open-diary-button') {
-                        showDiaryPasswordModal();
-                    } else if (clickedButton.id === 'youtube-link-button') { // Re-added YouTube pop-up logic
-                        showCustomAlert();
-                    }
-                    else if (clickedButton.classList.contains('external-link-button')) {
-                        const href = clickedButton.getAttribute('href');
-                        if (href) {
-                            window.open(href, '_blank');
-                        }
-                    }
-                }, actionDelay);
             });
         });
 
@@ -1265,7 +1278,7 @@
             "brother", "brothers", "family", "siblings", "rimon", "saimon",
             "dream", "dreams", "wish", "wishes", "goals", "aspirations", "future",
             "food", "favorite food", "eat", "eating", "cow meat", "biriyani", "biryani",
-            "origin", "where are you from", "where is emon from", "galaxy", "earth", "bangladesh",
+            "origin", "where are you from", "where is emon from",
             "collab", "collaboration", "promote", "promotion", "sponsor", "sponsorship", "business", "work with"
         ];
 
@@ -1339,7 +1352,7 @@ Your direct answer:`;
             }
 
             try {
-                const apiKey = "YOUR_GEMINI_API_KEY"; // REPLACE WITH YOUR ACTUAL GEMINI API KEY
+                const apiKey = "AIzaSyAyKPocbERL1XmrzTkR73306yAwpIPdxPY"; // YOUR PROVIDED GEMINI API KEY
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 const response = await fetch(apiUrl, {
