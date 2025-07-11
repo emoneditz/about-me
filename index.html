@@ -189,8 +189,8 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.2); /* 20% opaque black tint */
-            backdrop-filter: blur(5px); /* Subtle blur effect */
-            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(2px); /* Subtle blur effect - REDUCED BLUR */
+            -webkit-backdrop-filter: blur(2px); /* REDUCED BLUR */
             z-index: -1; /* Between video and content */
         }
 
@@ -297,7 +297,7 @@
             transform: rotateY(360deg); /* Spin effect */
         }
 
-        /* Button container for slide effect */
+        /* Button container for slide effect - REMOVED GRADIENT */
         .link-card-button-container {
             position: absolute;
             bottom: 0;
@@ -307,7 +307,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
+            /* background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0)); */ /* Removed this line */
             transform: translateY(100%); /* Start off-screen */
             opacity: 0;
             transition: transform 0.4s ease-out, opacity 0.4s ease-out;
@@ -678,9 +678,17 @@
             opacity: 1;
         }
 
-        .password-input {
+        .password-input-wrapper {
+            position: relative;
             width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-input {
+            flex-grow: 1;
             padding: 1rem 1.25rem;
+            padding-right: 3.5rem; /* Make space for the eye icon */
             border-radius: 10px;
             background-color: rgba(26, 32, 44, 0.1);
             border: 1px solid var(--border-color-dark);
@@ -697,6 +705,21 @@
         .password-input::placeholder {
             color: rgba(255, 255, 255, 0.4);
         }
+
+        .toggle-password-visibility {
+            position: absolute;
+            right: 1.25rem;
+            background: none;
+            border: none;
+            color: var(--text-color-dark);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        .toggle-password-visibility:hover {
+            color: var(--primary-glow);
+        }
+
 
         .password-submit-button {
             padding: 1rem 2rem;
@@ -731,8 +754,7 @@
 
     <!-- Background Video -->
     <video autoplay loop playsinline muted id="background-video">
-        <source src="https://raw.githubusercontent.com/emoneditz/about-me/main/a.mp4" type="video/mp4">
-        Your browser does not support the video tag.
+        <!-- Source will be set dynamically by JavaScript -->
     </video>
 
     <!-- Video Overlay for Blur and Tint -->
@@ -957,7 +979,12 @@
                 <button id="password-modal-close-button" class="modal-close-button">×</button>
             </div>
             <p class="text-gray-300">Enter the password to access Emon's private diary:</p>
-            <input type="password" id="diary-password-input" class="password-input" placeholder="Enter password">
+            <div class="password-input-wrapper">
+                <input type="password" id="diary-password-input" class="password-input" placeholder="Enter password">
+                <button type="button" id="toggle-password-visibility" class="toggle-password-visibility">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
             <p id="password-error-message" class="password-error">Incorrect password. Please try again.</p>
             <button id="password-submit-button" class="password-submit-button">
                 Unlock <i class="fas fa-unlock ml-2"></i>
@@ -981,12 +1008,26 @@
             }
         }
 
+        // --- Video Background Logic ---
+        const videoUrls = [
+            "https://raw.githubusercontent.com/emoneditz/about-me/main/a.mp4",
+            "https://raw.githubusercontent.com/emoneditz/about-me/main/Space _ 4k(720P_HD).mp4"
+        ];
+        const randomVideoUrl = videoUrls[Math.floor(Math.random() * videoUrls.length)];
+        const backgroundVideo = document.getElementById('background-video');
+        if (backgroundVideo) {
+            const sourceElement = document.createElement('source');
+            sourceElement.src = randomVideoUrl;
+            sourceElement.type = "video/mp4"; // Assuming both are MP4
+            backgroundVideo.appendChild(sourceElement);
+            backgroundVideo.load(); // Load the new source
+        }
+
         // Preloader Logic
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
             const spinnerContainer = preloader.querySelector('.spinner-container');
             const clickPrompt = document.getElementById('click-prompt');
-            const backgroundVideo = document.getElementById('background-video');
 
             // Hide spinner and show "Click to Enter" after a short delay
             setTimeout(() => {
@@ -1362,12 +1403,18 @@ Your direct answer:`;
         const diaryPasswordInput = document.getElementById('diary-password-input');
         const passwordSubmitButton = document.getElementById('password-submit-button');
         const passwordErrorMessage = document.getElementById('password-error-message');
+        const togglePasswordVisibilityButton = document.getElementById('toggle-password-visibility');
 
-        const correctPassword = "07 6 2025 EMON!!!!"; // Your exact password
+        // Function to normalize password input for comparison (only check for "lamiya")
+        function normalizePassword(input) {
+            return input.toLowerCase(); // Convert to lowercase
+        }
+
+        const diaryRedirectUrl = "https://emoneditz.github.io/27-06-2025-Lamiya/";
 
         function showDiaryPasswordModal() {
             diaryPasswordModalOverlay.classList.add('active');
-            diaryPasswordInput.value = correctPassword; // Auto-input the password
+            diaryPasswordInput.value = ''; // Clear input on open
             passwordErrorMessage.classList.remove('active'); // Hide error message
             diaryPasswordInput.focus(); // Focus on the input field
         }
@@ -1381,9 +1428,12 @@ Your direct answer:`;
         passwordModalCloseButton.addEventListener('click', hideDiaryPasswordModal);
 
         passwordSubmitButton.addEventListener('click', () => {
-            if (diaryPasswordInput.value === correctPassword) {
+            const enteredPassword = normalizePassword(diaryPasswordInput.value);
+
+            // Check if the entered password contains "lamiya"
+            if (enteredPassword.includes("lamiya")) {
                 hideDiaryPasswordModal();
-                window.open('https://emoneditz.github.io/the-password/', '_blank'); // Open diary page in new tab
+                window.open(diaryRedirectUrl, '_blank'); // Open diary page in new tab
             } else {
                 passwordErrorMessage.classList.add('active'); // Show error message
                 diaryPasswordInput.value = ''; // Clear input for retry
@@ -1396,6 +1446,18 @@ Your direct answer:`;
                 passwordSubmitButton.click(); // Trigger button click on Enter
             }
         });
+
+        // Toggle password visibility
+        if (togglePasswordVisibilityButton && diaryPasswordInput) {
+            togglePasswordVisibilityButton.addEventListener('click', () => {
+                const type = diaryPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                diaryPasswordInput.setAttribute('type', type);
+
+                // Toggle eye icon
+                togglePasswordVisibilityButton.querySelector('i').classList.toggle('fa-eye');
+                togglePasswordVisibilityButton.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+        }
     </script>
 </body>
 </html>
