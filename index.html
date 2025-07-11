@@ -53,7 +53,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            background-color: #000;
+            background-color: transparent; /* Ensure body background is transparent to show video */
         }
 
         html.dark body {
@@ -143,21 +143,60 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Particle.js container */
-        #particles-js {
+        /* Background Video Styles */
+        #bgVideo { /* Renamed from background-video to match user's provided ID */
             position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -2;
-            background: linear-gradient(135deg, #0a0a1a, #1a0a2a);
-            transition: background 0.5s ease;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            z-index: -3; /* Lowest z-index to be behind everything */
+            filter: brightness(0.7); /* Slightly dim the video */
         }
 
-        html.dark #particles-js {
-            background: linear-gradient(135deg, #050510, #100515);
+        /* Glass overlay for unmute message */
+        .glass-unmute-overlay { /* Renamed from .glass to avoid conflict and be more specific */
+            position: fixed; /* Changed to fixed to cover entire viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4); /* Darker background for better contrast */
+            border-radius: 0; /* No border-radius for full screen overlay */
+            padding: 20px;
+            text-align: center;
+            color: white;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: none; /* No border for full screen overlay */
+            z-index: -2; /* Between video and main content */
+            transition: opacity 0.5s ease;
+            opacity: 1; /* Initially visible */
+            pointer-events: auto; /* Allow clicks initially */
         }
+
+        .glass-unmute-overlay.hidden {
+            opacity: 0;
+            pointer-events: none; /* Disable clicks when hidden */
+        }
+
+        .glass-unmute-overlay h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        .glass-unmute-overlay p {
+            font-size: 1.2em;
+            opacity: 0.8;
+        }
+
 
         /* Custom scrollbar */
         ::-webkit-scrollbar {
@@ -262,7 +301,7 @@
             transform: rotateY(360deg); /* Spin effect */
         }
 
-        /* Button container for slide effect */
+        /* Button container for slide effect - REMOVED GRADIENT BACKGROUND */
         .link-card-button-container {
             position: absolute;
             bottom: 0;
@@ -272,7 +311,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
+            background: transparent; /* Changed from linear-gradient to transparent */
             transform: translateY(100%); /* Start off-screen */
             opacity: 0;
             transition: transform 0.4s ease-out, opacity 0.4s ease-out;
@@ -694,6 +733,18 @@
 </head>
 <body class="relative dark-mode-rgb">
 
+    <!-- Background Video -->
+    <video id="bgVideo" autoplay muted loop playsinline>
+        <source src="https://raw.githubusercontent.com/emoneditz/about-me/main/a.mp4" type="video/mp4" onerror="console.error('Video loading failed for MP4 source.');">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Glass overlay for unmute message -->
+    <div id="unmuteGlassOverlay" class="glass-unmute-overlay">
+        <h1>Welcome!</h1>
+        <p>Just touch anywhere once to hear the sound 🎵</p>
+    </div>
+
     <!-- Preloader -->
     <div id="preloader">
         <div class="spinner-container">
@@ -715,9 +766,6 @@
             </div>
         </nav>
     </header>
-
-    <!-- Particles.js background -->
-    <div id="particles-js"></div>
 
     <!-- Hero Section (for avatar and intro) -->
     <section id="hero" class="relative z-10 flex flex-col items-center justify-center min-h-screen pt-32 pb-16 px-4 w-full max-w-2xl mx-auto text-white">
@@ -922,8 +970,6 @@
 
     <!-- Typed.js CDN -->
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
-    <!-- Particles.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
     <script>
         // Set initial RGB values for CSS variables based on current theme
@@ -936,18 +982,6 @@
                 body.classList.remove('dark-mode-rgb');
                 body.classList.add('light-mode-rgb');
             }
-            // Also update the gradient colors for particles.js if it's already loaded
-            if (typeof particlesJS !== 'undefined' && particlesJS.particlesData && particlesJS.particlesData.length > 0 && particlesJS.particlesData[0].particles) {
-                const currentParticles = particlesJS.particlesData[0].particles;
-                if (isDarkMode) {
-                    currentParticles.color.value = ["#8affd1", "#c4b5fd", "#00eaff", "#a78bfa", "#00c6ff"]; // Dark mode colors
-                    currentParticles.line_linked.color = "#4a90e2"; // Dark mode line color
-                } else {
-                    currentParticles.color.value = ["#00eaff", "#a78bfa", "#8affd1", "#c4b5fd", "#00c6ff"]; // Light mode colors
-                    currentParticles.line_linked.color = "#4a90e2"; // Light mode line color
-                }
-                particlesJS.fn.particlesRefresh(); // Refresh particles to apply new colors
-            }
         }
 
         // Preloader Logic
@@ -958,6 +992,11 @@
                 setTimeout(() => {
                     preloader.style.display = 'none';
                 }, 700);
+            }
+            // Ensure video starts playing after preloader, if not already
+            const video = document.getElementById('bgVideo');
+            if (video) {
+                video.play().catch(error => console.error("Video autoplay failed:", error));
             }
         });
 
@@ -986,122 +1025,6 @@
                 });
             }
         });
-
-        // Particles.js Initialization
-        window.onload = function() {
-            if (typeof particlesJS !== 'undefined') {
-                particlesJS('particles-js', {
-                    "particles": {
-                        "number": {
-                            "value": 250,
-                            "density": {
-                                "enable": true,
-                                "value_area": 2000
-                            }
-                        },
-                        "color": {
-                            "value": ["#00eaff", "#a78bfa", "#8affd1", "#c4b5fd", "#00c6ff"]
-                        },
-                        "shape": {
-                            "type": ["circle", "polygon"],
-                            "stroke": {
-                                "width": 0,
-                                "color": "#000000"
-                            },
-                            "polygon": {
-                                "nb_sides": 6
-                            }
-                        },
-                        "opacity": {
-                            "value": 0.6,
-                            "random": true,
-                            "anim": {
-                                "enable": true,
-                                "speed": 0.8,
-                                "opacity_min": 0.2,
-                                "sync": false
-                            }
-                        },
-                        "size": {
-                            "value": 2,
-                            "random": true,
-                            "anim": {
-                                "enable": true,
-                                "speed": 1.5,
-                                "size_min": 0.5,
-                                "sync": false
-                            }
-                        },
-                        "line_linked": {
-                            "enable": true,
-                            "distance": 100,
-                            "color": "#4a90e2",
-                            "opacity": 0.4,
-                            "width": 1.2
-                        },
-                        "move": {
-                            "enable": true,
-                            "speed": 1.5,
-                            "direction": "none",
-                            "random": true,
-                            "straight": false,
-                            "out_mode": "out",
-                            "bounce": false,
-                            "attract": {
-                                "enable": true,
-                                "rotateX": 400,
-                                "rotateY": 800
-                            }
-                        }
-                    },
-                    "interactivity": {
-                        "detect_on": "canvas",
-                        "events": {
-                            "onhover": {
-                                "enable": true,
-                                "mode": "grab"
-                            },
-                            "onclick": {
-                                "enable": true,
-                                "mode": "push"
-                            },
-                            "resize": true
-                        },
-                        "modes": {
-                            "grab": {
-                                "distance": 180,
-                                "line_linked": {
-                                    "opacity": 1
-                                }
-                            },
-                            "bubble": {
-                                "distance": 250,
-                                "size": 30,
-                                "duration": 2,
-                                "opacity": 8,
-                                "speed": 3
-                            },
-                            "repulse": {
-                                "distance": 120,
-                                "duration": 0.4
-                            },
-                            "push": {
-                                "particles_nb": 4
-                            },
-                            "remove": {
-                                "particles_nb": 2
-                            }
-                        }
-                    },
-                    "retina_detect": true
-                });
-            } else {
-                console.error("particles.js not loaded.");
-            }
-            // Ensure initial RGB variables are set correctly based on the default theme
-            setRgbVariables(document.documentElement.classList.contains('dark'));
-        };
-
 
         // Dark/Light Mode Toggle
         const themeToggle = document.getElementById('theme-toggle');
@@ -1231,7 +1154,6 @@
             const clickedButton = event.target.closest('.link-card-button');
 
             if (clickedButton) {
-                console.log(`[Link Card Action] Button clicked: ${clickedButton.id || clickedButton.textContent.trim()}`);
                 if (clickedButton.id === 'open-diary-button') {
                     showDiaryPasswordModal();
                 } else if (clickedButton.id === 'youtube-link-button') {
@@ -1239,12 +1161,13 @@
                 } else if (clickedButton.classList.contains('external-link-button')) {
                     const href = clickedButton.getAttribute('href');
                     if (href) {
-                        console.log(`[Link Card Action] Opening external link: ${href}`);
                         window.open(href, '_blank');
                     }
                 }
             } else {
-                console.log("[Link Card Action] Clicked on card but not on a specific button. No specific action.");
+                // If the click was on the card but not a specific button,
+                // and the card is not fully in viewport, scroll it.
+                // If it is fully in viewport, no action needed for a general card click.
             }
         }
 
@@ -1254,12 +1177,11 @@
                 const shouldScroll = !isElementFullyInViewport(card);
 
                 if (shouldScroll) {
-                    console.log(`[Link Card Click] Card "${card.querySelector('h3')?.textContent || 'Unknown'}" not fully in view. Scrolling...`);
                     card.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     // Add a small delay to allow scroll to complete before potential link opening
                     setTimeout(() => handleCardAction(event, card), 400);
                 } else {
-                    console.log(`[Link Card Click] Card "${card.querySelector('h3')?.textContent || 'Unknown'}" already in view. No scrolling needed.`);
+                    // If already in view, execute action immediately
                     handleCardAction(event, card);
                 }
             });
@@ -1457,6 +1379,32 @@ Your direct answer:`;
                 passwordSubmitButton.click(); // Trigger button click on Enter
             }
         });
+
+        /* Unmute Video on First Touch Logic */
+        const bgVideo = document.getElementById('bgVideo');
+        const unmuteGlassOverlay = document.getElementById('unmuteGlassOverlay');
+
+        function enableSoundAndHideOverlay() {
+            if (bgVideo) {
+                bgVideo.muted = false;
+                // Attempt to play, though autoplay should handle it if not paused
+                bgVideo.play().catch(error => console.error("Error playing video after unmute:", error));
+            }
+            if (unmuteGlassOverlay) {
+                unmuteGlassOverlay.classList.add('hidden'); // Fade out the overlay
+                // Remove event listeners after first interaction
+                document.body.removeEventListener('click', enableSoundAndHideOverlay);
+                document.body.removeEventListener('touchstart', enableSoundAndHideOverlay);
+            }
+        }
+
+        // Add event listeners for first interaction
+        document.body.addEventListener('click', enableSoundAndHideOverlay);
+        document.body.addEventListener('touchstart', enableSoundAndHideOverlay);
+
+        // Optional: If video is already playing and muted (e.g., after a refresh),
+        // and the user hasn't interacted, ensure the overlay is still shown.
+        // This is handled by the initial CSS opacity: 1 and hidden class.
     </script>
 </body>
 </html>
