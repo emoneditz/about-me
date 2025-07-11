@@ -53,7 +53,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            background-color: transparent; /* Ensure body background is transparent to show video */
+            /* Background handled by video and overlay now */
+            background-color: transparent;
         }
 
         html.dark body {
@@ -101,25 +102,32 @@
             height: 100%;
             background: #000000;
             display: flex;
+            flex-direction: column; /* Allow stacking icon and text */
             justify-content: center;
             align-items: center;
             z-index: 9999;
             transition: opacity 0.7s ease-out;
+            cursor: pointer; /* Indicate it's clickable */
+            color: white; /* Text color for preloader */
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
         }
 
-        .spinner-container {
+        #preloader .spinner-container {
             position: relative;
             width: 80px;
             height: 80px;
+            margin-bottom: 2rem; /* Space between spinner and text */
         }
 
-        .spinner {
+        #preloader .spinner {
             position: absolute;
             border-radius: 50%;
             animation: spin 1.5s linear infinite;
         }
 
-        .spinner:nth-child(1) {
+        #preloader .spinner:nth-child(1) {
             width: 80px;
             height: 80px;
             border: 8px solid rgba(255, 255, 255, 0.1);
@@ -127,7 +135,7 @@
             box-shadow: 0 0 25px var(--primary-glow);
         }
 
-        .spinner:nth-child(2) {
+        #preloader .spinner:nth-child(2) {
             width: 60px;
             height: 60px;
             border: 6px solid rgba(255, 255, 255, 0.1);
@@ -143,60 +151,48 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Background Video Styles */
-        #bgVideo { /* Renamed from background-video to match user's provided ID */
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            transform: translate(-50%, -50%);
-            object-fit: cover;
-            z-index: -3; /* Lowest z-index to be behind everything */
-            filter: brightness(0.7); /* Slightly dim the video */
+        #preloader .click-prompt {
+            opacity: 0; /* Initially hidden */
+            transition: opacity 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        /* Glass overlay for unmute message */
-        .glass-unmute-overlay { /* Renamed from .glass to avoid conflict and be more specific */
-            position: fixed; /* Changed to fixed to cover entire viewport */
+        #preloader .click-prompt.active {
+            opacity: 1; /* Visible after spinner */
+        }
+
+        #preloader .click-prompt i {
+            font-size: 3rem; /* Icon size */
+            color: var(--primary-glow);
+        }
+
+        /* Background Video Styles */
+        #background-video {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.4); /* Darker background for better contrast */
-            border-radius: 0; /* No border-radius for full screen overlay */
-            padding: 20px;
-            text-align: center;
-            color: white;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: none; /* No border for full screen overlay */
-            z-index: -2; /* Between video and main content */
-            transition: opacity 0.5s ease;
-            opacity: 1; /* Initially visible */
-            pointer-events: auto; /* Allow clicks initially */
+            object-fit: cover; /* Ensures the video covers the entire area */
+            z-index: -2; /* Behind everything else */
+            filter: brightness(0.7); /* Slightly dim the video */
         }
 
-        .glass-unmute-overlay.hidden {
-            opacity: 0;
-            pointer-events: none; /* Disable clicks when hidden */
+        /* Video Overlay for Blur and Tint */
+        #video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2); /* 20% opaque black tint */
+            backdrop-filter: blur(5px); /* Subtle blur effect */
+            -webkit-backdrop-filter: blur(5px);
+            z-index: -1; /* Between video and content */
         }
-
-        .glass-unmute-overlay h1 {
-            font-size: 2.5em;
-            margin-bottom: 15px;
-            font-weight: 700;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-        }
-        .glass-unmute-overlay p {
-            font-size: 1.2em;
-            opacity: 0.8;
-        }
-
 
         /* Custom scrollbar */
         ::-webkit-scrollbar {
@@ -301,7 +297,7 @@
             transform: rotateY(360deg); /* Spin effect */
         }
 
-        /* Button container for slide effect - REMOVED GRADIENT BACKGROUND */
+        /* Button container for slide effect */
         .link-card-button-container {
             position: absolute;
             bottom: 0;
@@ -311,7 +307,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: transparent; /* Changed from linear-gradient to transparent */
+            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
             transform: translateY(100%); /* Start off-screen */
             opacity: 0;
             transition: transform 0.4s ease-out, opacity 0.4s ease-out;
@@ -734,22 +730,23 @@
 <body class="relative dark-mode-rgb">
 
     <!-- Background Video -->
-    <video id="bgVideo" autoplay muted loop playsinline>
-        <source src="https://raw.githubusercontent.com/emoneditz/about-me/main/a.mp4" type="video/mp4" onerror="console.error('Video loading failed for MP4 source.');">
+    <video autoplay loop playsinline muted id="background-video">
+        <source src="https://raw.githubusercontent.com/emoneditz/about-me/main/a.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
-    <!-- Glass overlay for unmute message -->
-    <div id="unmuteGlassOverlay" class="glass-unmute-overlay">
-        <h1>Welcome!</h1>
-        <p>Just touch anywhere once to hear the sound 🎵</p>
-    </div>
+    <!-- Video Overlay for Blur and Tint -->
+    <div id="video-overlay"></div>
 
-    <!-- Preloader -->
+    <!-- Preloader / Click to Enter Screen -->
     <div id="preloader">
         <div class="spinner-container">
             <div class="spinner"></div>
             <div class="spinner"></div>
+        </div>
+        <div id="click-prompt" class="click-prompt">
+            <i class="fas fa-hand-pointer"></i> <!-- Pointer icon -->
+            <span>Click to Enter</span>
         </div>
     </div>
 
@@ -987,16 +984,36 @@
         // Preloader Logic
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
-            if (preloader) {
+            const spinnerContainer = preloader.querySelector('.spinner-container');
+            const clickPrompt = document.getElementById('click-prompt');
+            const backgroundVideo = document.getElementById('background-video');
+
+            // Hide spinner and show "Click to Enter" after a short delay
+            setTimeout(() => {
+                if (spinnerContainer) {
+                    spinnerContainer.style.display = 'none'; // Hide the spinner
+                }
+                if (clickPrompt) {
+                    clickPrompt.classList.add('active'); // Show the click prompt
+                }
+            }, 1500); // Adjust delay as needed for spinner animation
+
+            // Handle click on preloader to enter and unmute
+            preloader.addEventListener('click', () => {
+                if (backgroundVideo && backgroundVideo.muted) {
+                    backgroundVideo.muted = false;
+                    backgroundVideo.play().catch(error => console.error("Video play on unmute failed:", error));
+                }
+                // Fade out preloader
                 preloader.style.opacity = '0';
                 setTimeout(() => {
                     preloader.style.display = 'none';
-                }, 700);
-            }
-            // Ensure video starts playing after preloader, if not already
-            const video = document.getElementById('bgVideo');
-            if (video) {
-                video.play().catch(error => console.error("Video autoplay failed:", error));
+                }, 700); // Match CSS transition duration
+            }, { once: true }); // Ensure this click listener only fires once
+
+            // Attempt to play video after preloader, it will be muted by default
+            if (backgroundVideo) {
+                backgroundVideo.play().catch(error => console.error("Video autoplay failed (likely due to sound policy, but muted):", error));
             }
         });
 
@@ -1379,32 +1396,6 @@ Your direct answer:`;
                 passwordSubmitButton.click(); // Trigger button click on Enter
             }
         });
-
-        /* Unmute Video on First Touch Logic */
-        const bgVideo = document.getElementById('bgVideo');
-        const unmuteGlassOverlay = document.getElementById('unmuteGlassOverlay');
-
-        function enableSoundAndHideOverlay() {
-            if (bgVideo) {
-                bgVideo.muted = false;
-                // Attempt to play, though autoplay should handle it if not paused
-                bgVideo.play().catch(error => console.error("Error playing video after unmute:", error));
-            }
-            if (unmuteGlassOverlay) {
-                unmuteGlassOverlay.classList.add('hidden'); // Fade out the overlay
-                // Remove event listeners after first interaction
-                document.body.removeEventListener('click', enableSoundAndHideOverlay);
-                document.body.removeEventListener('touchstart', enableSoundAndHideOverlay);
-            }
-        }
-
-        // Add event listeners for first interaction
-        document.body.addEventListener('click', enableSoundAndHideOverlay);
-        document.body.addEventListener('touchstart', enableSoundAndHideOverlay);
-
-        // Optional: If video is already playing and muted (e.g., after a refresh),
-        // and the user hasn't interacted, ensure the overlay is still shown.
-        // This is handled by the initial CSS opacity: 1 and hidden class.
     </script>
 </body>
 </html>
