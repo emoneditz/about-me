@@ -1131,6 +1131,7 @@
             favoriteFood: "Emon's favorite food is cow meat Biriyani.",
             origin: "Milky Way Galaxy, Earth, Bangladesh",
             collabInterest: "Emon is not interested in any collaborations, promotions, or sponsorships."
+            quote: " Who am I to judge people when I am itself a incomplete person?.... ",
         };
 
         // Function to add a message to the chat history UI
@@ -1260,6 +1261,7 @@
             "food", "favorite food", "eat", "eating", "cow meat", "biriyani", "biryani",
             "origin", "where are you from", "where is emon from",
             "collab", "collaboration", "promote", "promotion", "sponsor", "sponsorship", "business", "work with"
+            "quote", "what is his favourite quote? ", "Emon favourite quote"
         ];
 
         // Send Message to Gemini API
@@ -1310,6 +1312,7 @@ Emon's biggest dreams and wishes: "${emonDetails.dreamsAndWishes}"
 Emon's favorite food: "${emonDetails.favoriteFood}"
 Emon's origin is: "${emonDetails.origin}"
 Emon's interest in collaborations/promotions/sponsorships: "${emonDetails.collabInterest}"
+Emon's favourite quote is: "${emonDetails.quote}"
 `;
 
             if (isEmonSpecificQuestion) {
@@ -1325,7 +1328,7 @@ Your direct answer:`;
                 geminiApiContents.push({ role: "user", parts: [{ text: emonSpecificInstruction }] });
             } else {
                 // For general questions or conversational cues, use a general instruction
-                const generalAiInstruction = `You are a helpful AI assistant. Respond conversationally and naturally. If the user makes a general remark or asks a general question, acknowledge it briefly and perhaps ask an open-ended follow-up question to continue the conversation. **Do NOT volunteer specific facts about Emon, especially personal or romantic details, unless explicitly asked about those specific details.**`;
+                const generalAiInstruction = `You are a helpful AI assistant. Respond conversationally and naturally. If the user makes a general remark or asks a general question, acknowledge it briefly and perhaps ask an open-ended follow-up question to continue the conversation. **Do NOT volunteer specific facts about Emon, especially personal or romantic details, unless asked about those specific details, if they asked you must answer the questions like which type of girl he like or emon like.**`;
                 geminiApiContents.push({ role: "user", parts: [{ text: generalAiInstruction }] });
                 geminiApiContents = geminiApiContents.concat(chatHistory.map(msg => ({ role: msg.role, parts: msg.parts })));
                 geminiApiContents.push({ role: "user", parts: [{ text: prompt }] });
