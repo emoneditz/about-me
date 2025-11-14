@@ -1335,7 +1335,8 @@ Your direct answer:`;
             }
 
             try {
-                const apiKey = "AIzaSyCscGammrn6cZmJnSFY44Vw2PZ9F02q8RY"; // YOUR PROVIDED GEMINI API KEY
+                // *** UPDATED API KEY HERE ***
+                const apiKey = "AIzaSyAk1UBVYYTM6lgp454kIoCzv2VfeK3DFtU"; // YOUR PROVIDED GEMINI API KEY
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 const response = await fetch(apiUrl, {
@@ -1363,6 +1364,7 @@ Your direct answer:`;
                 chatInput.focus();
 
             } catch (error) {
+
                 console.error("Error communicating with Gemini API:", error);
                 loadingIndicator.remove();
                 addMessageToChat("An error occurred while connecting to the assistant. Please check your network.", 'ai');
@@ -1464,3 +1466,4 @@ Your direct answer:`;
     </script>
 </body>
 </html>
+
