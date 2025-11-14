@@ -736,6 +736,10 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(var(--primary-glow-rgb), 0.4);
         }
+        .password-submit-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
         .password-error {
             color: #ff4d4d; /* Bright red for error */
             font-size: 0.95rem;
@@ -1115,23 +1119,10 @@
 
         let chatHistory = []; // Stores the conversation history for the API
 
-        // Emon's details - UPDATED FOR CLARITY AND API USE
+        // Emon's details - These are now primarily used on the serverless function side
         const emonDetails = {
             name: "Emon",
-            roles: "a student, a tech explorer, a human kind",
-            relationshipStatus: "Emon does not currently have a girlfriend, as he is still a student. He finds that relationships often lead to heartbreak. He is loyal to his future Queen and maintains distance from girls for this reason.",
-            birthday: "Emon's birthday is on the 3rd day of any month.",
-            girlType: "Emon is looking for a partner with no ex-partners and cooking skills. He does not care about physical appearance or skin tone.",
-            hobbies: "Emon likes to play video games, especially shooting games. His favorite game is Free Fire. He also enjoys video editing.",
-            smoking: "Emon is not engaged with any smoking or related things.",
-            contact: "You can contact Emon by asking his AI here or by direct messaging him on Facebook.",
-            crushStatus: "Emon does not have any crush online or in real life. In online interactions, he believes people are different offline and online. In offline settings, he always stays away from girls because a heartbreak could ruin his life.",
-            brothers: "Emon has two brothers. Rimon is 2.8 years older than him, and Saimon is 6 years younger than him.",
-            dreamsAndWishes: "Emon's biggest dreams and wishes are: 1. To see his family’s real smile, not the fake one, but the one from the heart. 2. For his family's lasting health and safety. 3. To be the reason behind his family's true happiness.",
-            favoriteFood: "Emon's favorite food is cow meat Biriyani.",
-            origin: "Milky Way Galaxy, Earth, Bangladesh",
-            collabInterest: "Emon is not interested in any collaborations, promotions, or sponsorships.",
-            quote: " Who am I to judge people when I am itself a incomplete person?.... ",
+            // Other details are now handled by the API backend
         };
 
         // Function to add a message to the chat history UI
@@ -1246,30 +1237,17 @@
             });
         });
 
+        // ===================================================================
+        // === VERCEL API FUNCTION (CHAT) - MODIFIED ===
+        // ===================================================================
 
-        // Keywords that trigger specific Emon details via Gemini API
-        const emonSpecificKeywords = [
-            "girlfriend", "relationship", "single", "married", "partner", "love life", "gf",
-            "birthday", "birth date", "born", "bday",
-            "type in girl", "ideal girl", "girl type", "preferences in girl", "what kind of girl", "dream girl", "flair skin", "fair skin", "looking for in a partner",
-            "contact", "reach out", "get in touch", "how to contact me", "how can I contact", "contact emon", "dm me",
-            "hobbies", "games", "favorite game", "free fire", "shooting games", "what does he like to do", "video editing",
-            "smoking", "smoke", "cigarettes", "vape", "drugs",
-            "crush", "have a crush", "crushes", "love interest", "like anyone", "liked anyone",
-            "brother", "brothers", "family", "siblings", "rimon", "saimon",
-            "dream", "dreams", "wish", "wishes", "goals", "aspirations", "future",
-            "food", "favorite food", "eat", "eating", "cow meat", "biriyani", "biryani",
-            "origin", "where are you from", "where is emon from",
-            "collab", "collaboration", "promote", "promotion", "sponsor", "sponsorship", "business", "work with",
-            "quote", "what is his favourite quote? ", "Emon favourite quote"
-        ];
-
-        // Send Message to Gemini API
+        // Send Message to our Vercel Serverless Function
         async function sendMessageToGemini() {
             const prompt = chatInput.value.trim();
             if (prompt === '') return;
 
             addMessageToChat(prompt, 'user');
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
             const lowerCasePrompt = prompt.toLowerCase();
 
             chatInput.value = '';
@@ -1280,10 +1258,8 @@
             loadingIndicator.innerHTML = '<span>AI is thinking</span><span class="dot"></span><span class="dot"></span><span class="dot"></span>';
             chatHistoryDiv.appendChild(loadingIndicator);
             chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
-
-            let geminiApiContents = [];
-
-            // Handle AI identity questions first (local response, no Gemini call for this)
+            
+            // Handle AI identity questions locally first
             const aiIdentityKeywords = ["who are you", "what are you", "your creator", "who made you", "where are you from", "who created you", "your origin", "about you"];
             if (aiIdentityKeywords.some(keyword => lowerCasePrompt.includes(keyword))) {
                 loadingIndicator.remove();
@@ -1295,67 +1271,29 @@
                 return;
             }
 
-            // Check if the prompt contains any Emon-specific keywords
-            const isEmonSpecificQuestion = emonSpecificKeywords.some(keyword => lowerCasePrompt.includes(keyword));
-
-            // Construct the comprehensive facts about Emon for the AI
-            const allEmonFacts = `
-Emon's relationship status is: "${emonDetails.relationshipStatus}"
-Emon's birthday is: "${emonDetails.birthday}"
-Emon's ideal partner has these qualities: "${emonDetails.girlType}"
-Emon's hobbies include: "${emonDetails.hobbies}"
-Regarding smoking: "${emonDetails.smoking}"
-You can contact Emon via: "${emonDetails.contact}"
-Emon's crush status is: "${emonDetails.crushStatus}"
-Emon's brothers: "${emonDetails.brothers}"
-Emon's biggest dreams and wishes: "${emonDetails.dreamsAndWishes}"
-Emon's favorite food: "${emonDetails.favoriteFood}"
-Emon's origin is: "${emonDetails.origin}"
-Emon's interest in collaborations/promotions/sponsorships: "${emonDetails.collabInterest}"
-Emon's favourite quote is: "${emonDetails.quote}"
-`;
-
-            if (isEmonSpecificQuestion) {
-                // If it's an Emon-specific question, provide the facts and a strict instruction
-                const emonSpecificInstruction = `You are a digital assistant for Emon. Your sole purpose for this specific query is to provide a direct, concise, and factual answer based *only* on the provided details about Emon. **You MUST NOT deviate from the provided facts. You MUST NOT ask for clarification. You MUST NOT mention privacy or personal boundaries. You MUST NOT rephrase or interpret the facts beyond what is necessary to directly answer the question.** If the exact information is not explicitly provided in these facts, state ONLY "I don't have that specific detail about Emon." Do not invent details or refer to yourself as a large language model.
-
-Here are the facts about Emon:
-${allEmonFacts}
-
-User's question: "${prompt}"
-
-Your direct answer:`;
-                geminiApiContents.push({ role: "user", parts: [{ text: emonSpecificInstruction }] });
-            } else {
-                // For general questions or conversational cues, use a general instruction
-                const generalAiInstruction = `You are a helpful AI assistant. Respond conversationally and naturally. If the user makes a general remark or asks a general question, acknowledge it briefly and perhaps ask an open-ended follow-up question to continue the conversation. **Do NOT volunteer specific facts about Emon, especially personal or romantic details, unless asked about those specific details, if they asked you must answer the questions like which type of girl he like or emon like.**`;
-                geminiApiContents.push({ role: "user", parts: [{ text: generalAiInstruction }] });
-                geminiApiContents = geminiApiContents.concat(chatHistory.map(msg => ({ role: msg.role, parts: msg.parts })));
-                geminiApiContents.push({ role: "user", parts: [{ text: prompt }] });
-            }
-
             try {
-                const apiKey = "AIzaSyCscGammrn6cZmJnSFY44Vw2PZ9F02q8RY"; // YOUR PROVIDED GEMINI API KEY
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                // The API endpoint now points to our own serverless function
+                const apiUrl = "/api/gemini"; 
 
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: geminiApiContents })
+                    // Send the prompt, the entire chat history, and the request type
+                    body: JSON.stringify({ 
+                        type: 'chat', // Specify this is a chat request
+                        prompt: prompt,
+                        history: chatHistory 
+                    })
                 });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.statusText}`);
+                }
 
                 const result = await response.json();
 
-                let aiResponse = "My apologies, I could not process that request at this moment. Please try again.";
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    aiResponse = result.candidates[0].content.parts[0].text;
-                } else {
-                    console.error("Gemini API response structure unexpected:", result);
-                    aiResponse = "I'm sorry, I couldn't find a clear answer to that. Perhaps I can help with something else?";
-                }
-
+                let aiResponse = result.text || "I'm sorry, I couldn't find a clear answer to that. Perhaps I can help with something else?";
+                
                 loadingIndicator.remove();
                 addMessageToChat(aiResponse, 'ai');
                 chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
@@ -1363,9 +1301,9 @@ Your direct answer:`;
                 chatInput.focus();
 
             } catch (error) {
-                console.error("Error communicating with Gemini API:", error);
+                console.error("Error communicating with Vercel API:", error);
                 loadingIndicator.remove();
-                addMessageToChat("An error occurred while connecting to the assistant. Please check your network.", 'ai');
+                addMessageToChat("An error occurred while connecting to the assistant. Please check your network and try again.", 'ai');
                 chatSendButton.disabled = false;
                 chatInput.focus();
             }
@@ -1400,21 +1338,17 @@ Your direct answer:`;
             observer.observe(card);
         });
 
-        /* Diary Password Modal Functionality */
+        // ===================================================================
+        // === DIARY PASSWORD MODAL (API) - MODIFIED ===
+        // ===================================================================
+
         const diaryPasswordModalOverlay = document.getElementById('diary-password-modal-overlay');
         const passwordModalCloseButton = document.getElementById('password-modal-close-button');
         const diaryPasswordInput = document.getElementById('diary-password-input');
         const passwordSubmitButton = document.getElementById('password-submit-button');
         const passwordErrorMessage = document.getElementById('password-error-message');
         const togglePasswordVisibilityButton = document.getElementById('toggle-password-visibility');
-
-        // Function to normalize password input for comparison (only check for "lamiya")
-        function normalizePassword(input) {
-            return input.toLowerCase(); // Convert to lowercase
-        }
-
-        const diaryRedirectUrl = "https://emoneditz.github.io/27-06-2025-Lamiya/";
-
+        
         function showDiaryPasswordModal() {
             diaryPasswordModalOverlay.classList.add('active');
             diaryPasswordInput.value = ''; // Clear input on open
@@ -1429,24 +1363,55 @@ Your direct answer:`;
         }
 
         passwordModalCloseButton.addEventListener('click', hideDiaryPasswordModal);
+        
+        async function checkDiaryPassword() {
+            const enteredPassword = diaryPasswordInput.value;
+            if (!enteredPassword) return;
 
-        passwordSubmitButton.addEventListener('click', () => {
-            const enteredPassword = normalizePassword(diaryPasswordInput.value);
+            passwordSubmitButton.disabled = true; // Prevent multiple clicks
+            passwordErrorMessage.classList.remove('active');
 
-            // Check if the entered password contains "lamiya"
-            if (enteredPassword.includes("lamiya")) {
-                hideDiaryPasswordModal();
-                window.open(diaryRedirectUrl, '_blank'); // Open diary page in new tab
-            } else {
-                passwordErrorMessage.classList.add('active'); // Show error message
-                diaryPasswordInput.value = ''; // Clear input for retry
-                diaryPasswordInput.focus();
+            try {
+                const response = await fetch('/api/gemini', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'password_check', // Specify this is a password check request
+                        password: enteredPassword
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Server responded with an error.");
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    hideDiaryPasswordModal();
+                    // The backend provides the URL to open
+                    window.open(data.url, '_blank'); 
+                } else {
+                    // Password was incorrect
+                    passwordErrorMessage.classList.add('active');
+                    diaryPasswordInput.value = '';
+                    diaryPasswordInput.focus();
+                }
+
+            } catch (error) {
+                console.error("Error verifying password:", error);
+                passwordErrorMessage.textContent = "Error verifying. Please try again.";
+                passwordErrorMessage.classList.add('active');
+            } finally {
+                passwordSubmitButton.disabled = false; // Re-enable the button
             }
-        });
+        }
+
+        passwordSubmitButton.addEventListener('click', checkDiaryPassword);
 
         diaryPasswordInput.addEventListener('keypress', (event) => {
             if (event.key === 'Enter') {
-                passwordSubmitButton.click(); // Trigger button click on Enter
+                checkDiaryPassword();
             }
         });
 
