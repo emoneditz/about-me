@@ -1108,10 +1108,7 @@
             }
         });
 
-        // ===================================================================
-        // === CLIENT-SIDE LOGIC (ALL API-DRIVEN) ===
-        // ===================================================================
-
+        /* Gemini Assistant Functionality */
         const askEmonButton = document.getElementById('ask-emon-button');
         const allLinksButton = document.getElementById('all-links-button');
         const geminiModalOverlay = document.getElementById('gemini-modal-overlay');
@@ -1120,6 +1117,315 @@
         const chatInput = document.getElementById('chat-input');
         const chatSendButton = document.getElementById('chat-send-button');
 
-        let chatHistory = []; // Stores the conversation history
+        let chatHistory = []; // Stores the conversation history for the API
 
-        // Function to add
+        // Emon's details - These are now primarily used on the serverless function side
+        const emonDetails = {
+            name: "Emon",
+            // Other details are now handled by the API backend
+        };
+
+        // Function to add a message to the chat history UI
+        function addMessageToChat(message, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-bubble', sender);
+            messageDiv.textContent = message;
+            chatHistoryDiv.appendChild(messageDiv);
+            chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
+        }
+
+        // Define the dynamic identity responses for the AI itself
+        const aiIdentityResponses = [
+            `Hello Mr/Miss, I am a digital assistant created by ${emonDetails.name}. If you want to know anything about him like - hobbies, preferences, or want to chat with me, just ask.`,
+            `Greetings. I am a digital assistant, brought into existence by ${emonDetails.name}. Feel free to inquire about his interests, preferences, or engage in conversation.`,
+            `You are speaking with a digital assistant, designed by ${emonDetails.name}. I can provide insights into his passions, preferences, or simply chat with you.`,
+            `My core programming was established by ${emonDetails.name}. Should you wish to learn about his hobbies, preferences, or just converse, I am here to assist.`
+        ];
+
+        // Function to get a random AI identity response
+        function getRandomAiIdentityResponse() {
+            const randomIndex = Math.floor(Math.random() * aiIdentityResponses.length);
+            return aiIdentityResponses[randomIndex];
+        }
+
+        // Handle "Ask me about Emon" button click (central AI trigger)
+        askEmonButton.addEventListener('click', () => {
+            geminiModalOverlay.classList.add('active');
+            chatHistoryDiv.innerHTML = ''; // Clear previous chat
+            chatHistory = []; // Clear chat history array
+
+            // AI immediately provides its Emon-centric introduction
+            const initialGreeting = getRandomAiIdentityResponse();
+            addMessageToChat(initialGreeting, 'ai');
+            chatHistory.push({ role: "model", parts: [{ text: initialGreeting }] });
+
+            chatInput.focus();
+        });
+
+        // Handle "All my links" button click
+        allLinksButton.addEventListener('click', () => {
+            document.getElementById('links').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Close Gemini Modal
+        modalCloseButton.addEventListener('click', () => {
+            geminiModalOverlay.classList.remove('active');
+        });
+
+        /* Custom Alert Modal Functionality */
+        const customAlertModalOverlay = document.getElementById('custom-alert-modal-overlay');
+        const customAlertCloseButton = document.getElementById('custom-alert-close-button');
+
+        function showCustomAlert() {
+            customAlertModalOverlay.classList.add('active');
+        }
+
+        customAlertCloseButton.addEventListener('click', () => {
+            customAlertModalOverlay.classList.remove('active');
+        });
+
+        // Function to check if an element is fully in viewport
+        function isElementFullyInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+            const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+
+            const isFullyVisible = (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= viewportHeight &&
+                rect.right <= viewportWidth
+            );
+            return isFullyVisible;
+        }
+
+        // Function to handle the action after potential scrolling
+        function handleCardAction(event, card) {
+            const clickedButton = event.target.closest('.link-card-button');
+
+            if (clickedButton) {
+                if (clickedButton.id === 'open-diary-button') {
+                    showDiaryPasswordModal();
+                } else if (clickedButton.id === 'youtube-link-button') {
+                    showCustomAlert();
+                } else if (clickedButton.classList.contains('external-link-button')) {
+                    const href = clickedButton.getAttribute('href');
+                    if (href) {
+                        window.open(href, '_blank');
+                    }
+                }
+            } else {
+                // If the click was on the card but not a specific button,
+                // and the card is not fully in viewport, scroll it.
+                // If it is fully in viewport, no action needed for a general card click.
+            }
+        }
+
+        // UNIVERSAL Link Card Click Handler for scrolling and opening links/alerts/modals
+        document.querySelectorAll('.link-card').forEach(card => {
+            card.addEventListener('click', (event) => {
+                const shouldScroll = !isElementFullyInViewport(card);
+
+                if (shouldScroll) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Add a small delay to allow scroll to complete before potential link opening
+                    setTimeout(() => handleCardAction(event, card), 400);
+                } else {
+                    // If already in view, execute action immediately
+                    handleCardAction(event, card);
+                }
+            });
+        });
+
+        // ===================================================================
+        // === VERCEL API FUNCTION (CHAT) - MODIFIED ===
+        // ===================================================================
+
+        // Send Message to our Vercel Serverless Function
+        async function sendMessageToGemini() {
+            const prompt = chatInput.value.trim();
+            if (prompt === '') return;
+
+            addMessageToChat(prompt, 'user');
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const lowerCasePrompt = prompt.toLowerCase();
+
+            chatInput.value = '';
+            chatSendButton.disabled = true;
+
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.classList.add('loading-indicator');
+            loadingIndicator.innerHTML = '<span>AI is thinking</span><span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+            chatHistoryDiv.appendChild(loadingIndicator);
+            chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
+            
+            // Handle AI identity questions locally first
+            const aiIdentityKeywords = ["who are you", "what are you", "your creator", "who made you", "where are you from", "who created you", "your origin", "about you"];
+            if (aiIdentityKeywords.some(keyword => lowerCasePrompt.includes(keyword))) {
+                loadingIndicator.remove();
+                const aiResponse = getRandomAiIdentityResponse();
+                addMessageToChat(aiResponse, 'ai');
+                chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
+                chatSendButton.disabled = false;
+                chatInput.focus();
+                return;
+            }
+
+            try {
+                // The API endpoint now points to our own serverless function
+                const apiUrl = "/api/gemini"; 
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    // Send the prompt, the entire chat history, and the request type
+                    body: JSON.stringify({ 
+                        type: 'chat', // Specify this is a chat request
+                        prompt: prompt,
+                        history: chatHistory 
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+
+                let aiResponse = result.text || "I'm sorry, I couldn't find a clear answer to that. Perhaps I can help with something else?";
+                
+                loadingIndicator.remove();
+                addMessageToChat(aiResponse, 'ai');
+                chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
+                chatSendButton.disabled = false;
+                chatInput.focus();
+
+            } catch (error) {
+                console.error("Error communicating with Vercel API:", error);
+                loadingIndicator.remove();
+                addMessageToChat("An error occurred while connecting to the assistant. Please check your network and try again.", 'ai');
+                chatSendButton.disabled = false;
+                chatInput.focus();
+            }
+        }
+
+        // Event listeners for sending messages
+        chatSendButton.addEventListener('click', sendMessageToGemini);
+        chatInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                sendMessageToGemini();
+            }
+        });
+
+        // Intersection Observer for fade-in animation
+        const linkCards = document.querySelectorAll('.link-card');
+        const observerOptions = {
+            root: null, // viewport
+            rootMargin: '0px',
+            threshold: 0.1 // 10% of the card must be visible
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target); // Stop observing once it's faded in
+                }
+            });
+        }, observerOptions);
+
+        linkCards.forEach(card => {
+            observer.observe(card);
+        });
+
+        // ===================================================================
+        // === DIARY PASSWORD MODAL (API) - MODIFIED ===
+        // ===================================================================
+
+        const diaryPasswordModalOverlay = document.getElementById('diary-password-modal-overlay');
+        const passwordModalCloseButton = document.getElementById('password-modal-close-button');
+        const diaryPasswordInput = document.getElementById('diary-password-input');
+        const passwordSubmitButton = document.getElementById('password-submit-button');
+        const passwordErrorMessage = document.getElementById('password-error-message');
+        const togglePasswordVisibilityButton = document.getElementById('toggle-password-visibility');
+        
+        function showDiaryPasswordModal() {
+            diaryPasswordModalOverlay.classList.add('active');
+            diaryPasswordInput.value = ''; // Clear input on open
+            passwordErrorMessage.classList.remove('active'); // Hide error message
+            diaryPasswordInput.focus(); // Focus on the input field
+        }
+
+        function hideDiaryPasswordModal() {
+            diaryPasswordModalOverlay.classList.remove('active');
+            diaryPasswordInput.value = ''; // Clear input on close
+            passwordErrorMessage.classList.remove('active'); // Hide error
+        }
+
+        passwordModalCloseButton.addEventListener('click', hideDiaryPasswordModal);
+        
+        async function checkDiaryPassword() {
+            const enteredPassword = diaryPasswordInput.value;
+            if (!enteredPassword) return;
+
+            passwordSubmitButton.disabled = true; // Prevent multiple clicks
+            passwordErrorMessage.classList.remove('active');
+
+            try {
+                const response = await fetch('/api/gemini', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'password_check', // Specify this is a password check request
+                        password: enteredPassword
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Server responded with an error.");
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    hideDiaryPasswordModal();
+                    // The backend provides the URL to open
+                    window.open(data.url, '_blank'); 
+                } else {
+                    // Password was incorrect
+                    passwordErrorMessage.classList.add('active');
+                    diaryPasswordInput.value = '';
+                    diaryPasswordInput.focus();
+                }
+
+            } catch (error) {
+                console.error("Error verifying password:", error);
+                passwordErrorMessage.textContent = "Error verifying. Please try again.";
+                passwordErrorMessage.classList.add('active');
+            } finally {
+                passwordSubmitButton.disabled = false; // Re-enable the button
+            }
+        }
+
+        passwordSubmitButton.addEventListener('click', checkDiaryPassword);
+
+        diaryPasswordInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                checkDiaryPassword();
+            }
+        });
+
+        // Toggle password visibility
+        if (togglePasswordVisibilityButton && diaryPasswordInput) {
+            togglePasswordVisibilityButton.addEventListener('click', () => {
+                const type = diaryPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                diaryPasswordInput.setAttribute('type', type);
+
+                // Toggle eye icon
+                togglePasswordVisibilityButton.querySelector('i').classList.toggle('fa-eye');
+                togglePasswordVisibilityButton.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+        }
+    </script>
+</body>
+</html>
